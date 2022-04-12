@@ -34,6 +34,7 @@ let tableAlgList = [
   "(U2) R U R' F' R U R' U R U' R' U' R' F R2 U' R'",
   "F R U R' U' F'",
 ];
+
 let tableStatesList = [
   "M2 U M' U2 M U M2",
   "U M2 U M' U2 M U M2",
@@ -48,7 +49,12 @@ let tableStatesList = [
   "U'",
   "",
 ];
+
 let involvedPieces = ["UFR", "UFL", "UBL", "UBR"];
+
+/********************************************************************************/
+/*****************************CREATE TABLE FUNCTION*****************************/
+/********************************************************************************/
 
 // Create and add main table elements
 let tableContainer = document.createElement("div");
@@ -125,7 +131,6 @@ for (let row = 0; row < tableAlgList.length; row++) {
   nextRow.appendChild(imageOverhead);
 
   // Add covered cases list and list of cases the current case can union with.
-  let rowCoverage = []; // Variable to push the covered cases for the current row.
   let alg = document.createElement("td");
   alg.innerHTML = tableAlgList[row];
   nextRow.appendChild(alg);
@@ -137,7 +142,6 @@ for (let row = 0; row < tableAlgList.length; row++) {
       tableAlgList[row]
     );
     nextRow.appendChild(crossedCase);
-    rowCoverage.push(compareStates(tableStatesList[col], tableAlgList[row])); // Add the current case to the row coverage.
   }
   //casesCoverage.push(rowCoverage); // Add the row coverage array to the main coverage array. This creates a table for later use.
 
@@ -145,7 +149,6 @@ for (let row = 0; row < tableAlgList.length; row++) {
   let coveredCases = document.createElement("td");
   coveredCases.innerHTML = findCoverage(row);
   nextRow.appendChild(coveredCases);
-  casesCoverage.push(rowCoverage); // Add the row coverage array to the main coverage array. This creates an array for later use.
 
   // Add possible unions to each row.
   let unionsWith = document.createElement("td");
@@ -193,6 +196,9 @@ function findCoverage(referenceNumber) {
 /********************************************************************************/
 
 function findUnions(referenceNumber) {
+  // Step 1: Find all cases which the current row case can solve to the desired states.
+  // This is the same as the crossed cases process used in the previous columns.
+  // An array of a list of numbers for each row is produced. Each one fills the "Cases this case covers" column
   let findUnionsCasesCoverage = [];
 
   for (let row = 0; row < tableAlgList.length; row++) {
@@ -205,6 +211,15 @@ function findUnions(referenceNumber) {
     findUnionsCasesCoverage.push(findUnionsRowCoverage); // Add the row coverage array to the main coverage array.
   }
 
+  // Step 2: Find all elements from the "Cases this case covers" column which contain any single element from each other.
+  // For COLL+1 for example, in ZBLL there are 12 edge cases for each of the 42 COLL cases.
+  // R U R' U R U2 R', and all other no-swap Sune edge cases, solves 9/12 of the cases to a U-perm or the solved state.
+  // R U R' U R U2 R' may cover cases 1, 2, 3, 4, 5, 6, 7, 8, and 9. We have to find the cases which cover 10, 11, and 12.
+  // However, a user might not input an alg list in the sorting order that they want.
+  // So it isn't as easy as knowing that it will be cases 1-12, 13-24, 25-36, and so on for COLL+1/ZBLL.
+  // The numbers could be anything.
+  // The idea here is that any single case can only be contained within any certain set of cases.
+  // It goes through each row and finds all rows which contain any single element from each other.
   let allCases = [];
   for (i = 0; i < findUnionsCasesCoverage.length; i++) {
     let possibleCases = [];
@@ -220,26 +235,45 @@ function findUnions(referenceNumber) {
     allCases.push(possibleCases);
   }
 
+  // Step 3: Find what is missing. For which cases does the current case not solve to the desired state?
+  // In the COLL+1 example, there are three no swap Sune ZBLL cases that R U R' U R U2 R' can't solve to a U-perm or solved state.
+  // For each row, the "Cases this case covers" and "This case unions with" numbers are compared.
+  // The numbers in "This case unions with" are filtered to contain only numbers which aren't in "Cases this case covers".
+  allCasesString = [];
   for (c = 0; c < allCases.length; c++) {
     allCases[c] = [...new Set(allCases[c].flat())].sort(function (a, b) {
       return a - b;
-    });
+    }); // Reduce the final column cases to only unique values.
     allCases[c] = allCases[c].filter(
       (x) => !findUnionsCasesCoverage[c].includes(x)
-    );
-    allCases[c] = String(allCases[c]).replace(/,/g, ", ");
+    ); // For each row, the two columns are compared. Values not in "Cases this case covers" are kept in "This case unions with".
+    allCasesString[c] = String(allCases[c]).replace(/,/g, ", "); // Convert to a sring with commas and spaces for better looking content.
   }
 
-  let unions = [];
+  // Step 4: Find the possible unions.
+  // For the current row in "This case unions with", go through the "Cases this case covers" column
+  //        and find the ones which include all elements from the current one.
 
-  return allCases[referenceNumber];
+  let allUnions = [];
+  for (u = 0; u < allCases.length; u++) {
+    let individualUnions = [];
+    for (uc = 0; uc < allCases.length; uc++) {
+      if (allCases[u].every((y) => findUnionsCasesCoverage[uc].includes(y))) {
+        individualUnions.push(uc + 1);
+      }
+    }
+    allUnions.push(individualUnions);
+    allUnions[u].flat();
+    allUnions[u] = String(allUnions[u]).replace(/,/g, ", ");
+  }
 
-  /*String(
-    [...new Set(allCases[u].flat())].sort(function (a, b) {
-      return a - b;
-    })
-  ).replace(/,/g, ", ");*/
+  //return allCasesString[referenceNumber]; // Use this if users request an additional column that shows the non-covered cases.
+  return allUnions[referenceNumber];
 }
+
+/********************************************************************************/
+/*****************************COMPARE STATES FUNCTION*****************************/
+/********************************************************************************/
 
 function compareStates(desiredState, alg) {
   let combo = getInverse(desiredState) + " " + getInverse(alg);
@@ -249,6 +283,7 @@ function compareStates(desiredState, alg) {
   let UPAUF = "U' " + combo;
   let caseNumber = 0;
 
+  // For each alg in the user input list, check if the desired state + alg combo state is equal.
   for (i = 0; i < tableAlgList.length; i++) {
     let caseState = String(applyAlg(getInverse(tableAlgList[i])));
     let noAUFState = String(applyAlg(noAUF));
@@ -270,22 +305,9 @@ function compareStates(desiredState, alg) {
   return caseNumber;
 }
 
-// **********Create new function which has two parameters.**********
-// These two parameters are two algs. An alg from the states list and an alg from the cases list.
-// Step 1. It inverses the states list alg, duplicates it to have four copies, and adds nothing, U, U', and U2.
-// Step 2. It inverses the cases list alg
-// Step 3. It combines each of the four inverse states list algs + AUFs with the inverse of the cases list alg.
-// Step 4. It duplicates the result from step 3 to have four copies.
-// Step 5. It adds nothing, U, U', and U2 to the four copies to find the possible pre-AUF positions.
-// Step 6. It runs the algs from step 5 through the applyAlg function to get their cube states.
-// Step 7. It compares these states with all of the algs from the main cases list to find a match.
-// Step 8. The states are compared using only the involved pieces that the user will input in a textarea.
-//      Might only need to compare the positions of those specific stickers that were input.
-//      Maybe no need to find RFU, and FUR if somone input UFR for example.
-// Step 9. It returns the position number in the cases list that matched.
-// Have the table code above run each column and row element intersection through this function.
-// Display the position number from this new function in the intersecting cell.
-// In the table code, store the position number in an array so that it can be used later for the covered cases and unions.
+/********************************************************************************/
+/*****************************CUBE STATES FUNCTION*****************************/
+/********************************************************************************/
 
 // Function to apply an alg and alter a cube state.
 function applyAlg(individualCase) {
@@ -1384,6 +1406,10 @@ function getInverse(individualCase) {
   return inverseCase;
 }
 
+/********************************************************************************/
+/*****************************FIND UNIONS BUTTON*****************************/
+/********************************************************************************/
+
 unionButton.addEventListener("click", () => {
   //**********Comment out the below code. Use it to pull the input from the boxes and call the appropriate functions.**********/
   let cases = document.getElementById("Cases").value.split("\n");
@@ -1400,6 +1426,68 @@ unionButton.addEventListener("click", () => {
   }
 
   desiredStates.value = finalStates.join("\n");
+
+  let cube = [
+    ["URF", "UFM", "UFL", "ULS", "ULB", "UBM", "UBR", "URS", "UMS"],
+    ["RFU", "RUS", "RUB", "RBE", "RBD", "RDS", "RDF", "RFE", "RES"],
+    ["FUR", "FRE", "FRD", "FDM", "FDL", "FLE", "FLU", "FUM", "FME"],
+    ["DFR", "DRS", "DRB", "DBM", "DBL", "DLS", "DLF", "DFM", "DMS"],
+    ["BRU", "BUM", "BUL", "BLE", "BLD", "BDM", "BDR", "BRE", "BME"],
+    ["LUF", "LFE", "LFD", "LDS", "LDB", "LBE", "LBU", "LUS", "LES"],
+  ];
+
+  let testState = ["URF", "UFL", "ULB", "FUR", "UFM"];
+
+  let newCube = [];
+  /*for (i = 0; i < 6; i++) {
+    for (j = 0; j < 9; j++) {
+      for (k = 0; k < testState.length; k++) {
+        if (cube[i][j] != testState[k]) {
+          cube[i][j] = "";
+        }
+      }
+    }
+    //if (testState.filter((x) => !cube[i].includes(x)))
+  }*/
+
+  /*for (i = 0; i < testState.length; i++) {
+    for (j = 0; j < cube.length; j++) {
+      for (k = 0; k < cube[j].length; k++) {
+        if (cube[j][k] != testState[i]) {
+          cube[j][k] = "";
+        }
+      }
+    }
+  }*/
+
+  /*let statesIndices = [];
+  for (i = 0; i < testState.length; i++) {
+    for (j = 0; j < testState.length; j++) {
+      statesIndices.push([cube[i].findIndex((x) => x.includes(testState[i]))]);
+    }
+  }*/
+
+  /*if (testState[0] == cube[0][0]) {
+    alert("Same");
+  }*/
+
+  /*for (i = 0; i < 6; i++) {
+    for (j = 0; j < 9; j++) {
+      if (cube[j].includes(testState) == true) {
+        cube[j] = "1";
+      }
+    }
+  }*/
+
+  for (i = 0; i < 6; i++) {
+    for (j = 0; j < 9; j++) {
+      if (!testState.includes(cube[i][j])) {
+        cube[i][j] = "";
+      }
+    }
+  }
+
+  alert(cube);
 
   //Test placing things from desired states box into new box. The code works.
   /*

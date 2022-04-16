@@ -133,7 +133,7 @@ function createTables() {
     // Add 3D image of case. Spaces are removed from the algorithms for VisualCube compatibility.
     let image3D = document.createElement("td");
     let image3DSource =
-      "<img src=http://cube.rider.biz/visualcube.php?fmt=png&bg=t&size=100&case=" +
+      "<img src=http://cube.rider.biz/visualcube.php?fmt=svg&size=100&case=" +
       inputCases[row].replace(/\s/g, "") +
       ">";
     image3D.innerHTML = image3DSource;
@@ -142,7 +142,7 @@ function createTables() {
     // Add overhead image of case.
     let imageOverhead = document.createElement("td");
     let imageOverheadSource =
-      "<img src=http://cube.rider.biz/visualcube.php?fmt=png&bg=t&size=100&view=plan&case=" +
+      "<img src=http://cube.rider.biz/visualcube.php?fmt=svg&size=100&view=plan&case=" +
       inputCases[row].replace(/\s/g, "") +
       ">";
     imageOverhead.innerHTML = imageOverheadSource;

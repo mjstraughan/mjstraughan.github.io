@@ -142,11 +142,8 @@ function createTables() {
     // Add overhead image of case.
     let imageOverhead = document.createElement("td");
     let imageOverheadSource =
-      "<img src=" +
-      '"' +
-      "http://cube.rider.biz/visualcube.php?fmt=png&bg=t&size=100&view=plan&case=" +
+      "<img src=http://cube.rider.biz/visualcube.php?fmt=png&bg=t&size=100&view=plan&case=" +
       inputCases[row].replace(/\s/g, "") +
-      '"' +
       ">";
     imageOverhead.innerHTML = imageOverheadSource;
     nextRow.appendChild(imageOverhead);

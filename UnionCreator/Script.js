@@ -1,14 +1,38 @@
 // To do:
-// Add "Clear Table" button. Or maybe people will like that they can have multiple tables.
 // Functionality for using specific pieces. The user inputs the pieces that they care about in the textarea.
-// The ability to save the contents of the tables
+// The ability to save the contents of the tables.
 // Maybe moving the individual turn functions from the cube states function into their own separate functions will make the program faster.
-// Maybe removing "referenceNumber" as a parameter in the findCoverage function and turning it into a variable
-///// wherever it is currently being referenced will speed up the program. As it did when I did the same for the findUnions function.
-// Move guide link to be near the text areas and buttons.
 // Build a Google Sheets batch solver alg list formatter.
 
+/********************************************************************************/
+/*****************************FIND UNIONS BUTTON*********************************/
+/********************************************************************************/
+
 let unionButton = document.querySelector("#unionButton");
+
+unionButton.addEventListener("click", () => {
+  createTables();
+});
+
+/********************************************************************************/
+/*****************************CLEAR TABLES BUTTON********************************/
+/********************************************************************************/
+
+let clearButton = document.querySelector("#Clear");
+
+clearButton.addEventListener("click", () => {
+  /*****Clear the tables*****/
+  // Get id for the container that holds the tables.
+  let tables = document.getElementById("tableContainer");
+  // Remove the container.
+  if (tables) tables.parentNode.removeChild(tables);
+
+  /*****Clear the input boxes*****/ // Will be enabled upon user request.
+  /*let inputCases = document.getElementById("Cases");
+  let desiredStates = document.getElementById("DesiredStates");
+  inputCases.value = "";
+  desiredStates.value = "";*/
+});
 
 /********************************************************************************/
 /*****************************CREATE TABLES FUNCTION******************************/
@@ -22,6 +46,7 @@ function createTables() {
     .value.split("\n");
   // Get all of the unions into a single variable for use throughout the tables.
   let allUnions = findUnions();
+  let allCoverage = findCoverage();
 
   /*****Combo Table*****/
   // Create and add main combo table elements
@@ -107,20 +132,20 @@ function createTables() {
 
     // Add 3D image of case. Spaces are removed from the algorithms for VisualCube compatibility.
     let image3D = document.createElement("td");
-    /*let image3DSource =
+    let image3DSource =
       "<img src=http://cube.rider.biz/visualcube.php?fmt=png&bg=t&size=100&case=" +
       inputCases[row].replace(/\s/g, "") +
       ">";
-    image3D.innerHTML = image3DSource;*/
+    image3D.innerHTML = image3DSource;
     nextRow.appendChild(image3D);
 
     // Add overhead image of case.
     let imageOverhead = document.createElement("td");
-    /*let imageOverheadSource =
+    let imageOverheadSource =
       "<img src=http://cube.rider.biz/visualcube.php?fmt=png&bg=t&size=100&view=plan&case=" +
       inputCases[row].replace(/\s/g, "") +
       ">";
-    imageOverhead.innerHTML = imageOverheadSource;*/
+    imageOverhead.innerHTML = imageOverheadSource;
     nextRow.appendChild(imageOverhead);
 
     // Add covered cases list and list of cases the current case can union with.
@@ -138,7 +163,13 @@ function createTables() {
 
     // Add list of covered cases to the "Cases this case covers" column.
     let coveredCases = document.createElement("td");
-    coveredCases.innerHTML = findCoverage(row);
+    // The array element is converted to a set to remove duplicates. Then converted back into an array then to a string.
+    // The string has spaces added after commas and is sorted numerically.
+    coveredCases.innerHTML = String(
+      [...new Set(allCoverage[row])].sort(function (a, b) {
+        return a - b;
+      })
+    ).replace(/,/g, ", ");
     nextRow.appendChild(coveredCases);
 
     // Add possible unions to each row.
@@ -197,7 +228,7 @@ function createTables() {
 /*****************************FIND COVERAGE FUNCTION*****************************/
 /********************************************************************************/
 
-function findCoverage(referenceNumber) {
+function findCoverage() {
   let inputCases = document.getElementById("Cases").value.split("\n");
   let desiredStates = document
     .getElementById("DesiredStates")
@@ -214,19 +245,8 @@ function findCoverage(referenceNumber) {
     findUnionsCasesCoverage.push(findUnionsRowCoverage); // Add the row coverage array to the main coverage array. This creates an array for later use.
   }
 
-  // Return the covered cases for the row.
-  // The array is converted to a set to remove duplicates. Then converted back into an array then to a string.
-  // The string has spaces added after commas and is sorted numerically.
-  return String(
-    [...new Set(findUnionsCasesCoverage[referenceNumber])].sort(function (
-      a,
-      b
-    ) {
-      return a - b;
-    })
-  ).replace(/,/g, ", ");
-
-  //return findUnionsCasesCoverage[referenceNumber];
+  // Return the covered cases.
+  return findUnionsCasesCoverage;
 }
 
 /********************************************************************************/
@@ -234,15 +254,18 @@ function findCoverage(referenceNumber) {
 /********************************************************************************/
 
 function findUnions() {
-  // Step 1: Find all cases which the current row case can solve to the desired states.
-  // This is the same as the crossed cases process used in the previous columns.
-  // An array of a list of numbers for each row is produced. Each one fills the "Cases this case covers" column
+  // Get the user input cases and states.
   let inputCases = document.getElementById("Cases").value.split("\n");
   let desiredStates = document
     .getElementById("DesiredStates")
     .value.split("\n");
+  // Create a main array to contain the coverage for each case.
   let findUnionsCasesCoverage = [];
 
+  // Step 1: Find all cases which the current row case can solve to the desired states.
+  // This is the same as the crossed cases process used in the previous columns.
+  // An array of a list of numbers for each row is produced. Each one fills the "Cases this case covers" column
+  // Each row of covered cases is pushed to the findUnionsCasesCoverage array.
   for (let row = 0; row < inputCases.length; row++) {
     let findUnionsRowCoverage = []; // Variable to push the covered cases for the current row.
     for (let col = 0; col < desiredStates.length; col++) {
@@ -294,7 +317,7 @@ function findUnions() {
 
   // Step 4: Find the possible unions.
   // For the current row in "This case unions with", go through the "Cases this case covers" column
-  //        and find the ones which include all elements from the current one.
+  ///// and find the ones which include all elements from the current one.
 
   let allUnions = [];
   for (u = 0; u < allCases.length; u++) {
@@ -346,6 +369,49 @@ function compareStates(desiredState, alg) {
     }
   }
   return caseNumber;
+}
+
+/********************************************************************************/
+/*****************************INVERSE ALGORITHMS FUNCTION************************/
+/********************************************************************************/
+
+// Function for inverting an alg.
+function getInverse(individualCase) {
+  let inverseCase = ""; // Set a blank alg.
+
+  // Loop through each character in the individual alg.
+  // Start at the end of the alg, invert the current move, then add it to a blank alg starting from the beginning.
+  for (let i = individualCase.length - 1; i >= 0; i--) {
+    if (individualCase[i] == " ") {
+      // Don't include any spaces that are in the alg. Those will be added later.
+      continue;
+    } else if (individualCase[i] == "(") {
+      // If the current character is "(", ignore it and continue.
+      continue;
+    } else if (individualCase[i] == ")") {
+      // If the current character is ")", ignore it and continue.
+      continue;
+    } else if (individualCase[i] == "'") {
+      // If the current character is the prime symbol, remove it, keep the letter turn, and move two characters backwards.
+      inverseCase += individualCase[i - 1] += " ";
+      i -= 1;
+    } else if (individualCase[i] == "2") {
+      // If the current character is 2, add it and the letter turn then move two characters backwards.
+      inverseCase += individualCase[i - 1] += "2 ";
+      i -= 1;
+    } else {
+      // If the current character is none of the above (should be a letter turn), keep it and add a prime symbol.
+      inverseCase += individualCase[i] += "' ";
+    }
+  }
+
+  // Remove a space from the end of the alg.
+  // if statement probably not necessary.
+  if (inverseCase.slice(-1) == " ") {
+    inverseCase = inverseCase.slice(0, -1);
+  }
+
+  return inverseCase;
 }
 
 /********************************************************************************/
@@ -1434,71 +1500,3 @@ function applyAlg(individualCase) {
 
   return cube;
 }
-
-// Function for inverting an alg.
-function getInverse(individualCase) {
-  let inverseCase = ""; // Set a blank alg.
-
-  // Loop through each character in the individual alg.
-  // Start at the end of the alg, invert the current move, then add it to a blank alg starting from the beginning.
-  for (let i = individualCase.length - 1; i >= 0; i--) {
-    if (individualCase[i] == " ") {
-      // Don't include any spaces that are in the alg. Those will be added later.
-      continue;
-    } else if (individualCase[i] == "(") {
-      // If the current character is "(", ignore it and continue.
-      continue;
-    } else if (individualCase[i] == ")") {
-      // If the current character is ")", ignore it and continue.
-      continue;
-    } else if (individualCase[i] == "'") {
-      // If the current character is the prime symbol, remove it, keep the letter turn, and move two characters backwards.
-      inverseCase += individualCase[i - 1] += " ";
-      i -= 1;
-    } else if (individualCase[i] == "2") {
-      // If the current character is 2, add it and the letter turn then move two characters backwards.
-      inverseCase += individualCase[i - 1] += "2 ";
-      i -= 1;
-    } else {
-      // If the current character is none of the above (should be a letter turn), keep it and add a prime symbol.
-      inverseCase += individualCase[i] += "' ";
-    }
-  }
-
-  // Remove a space from the end of the alg.
-  // if statement probably not necessary.
-  if (inverseCase.slice(-1) == " ") {
-    inverseCase = inverseCase.slice(0, -1);
-  }
-
-  return inverseCase;
-}
-
-/********************************************************************************/
-/*****************************FIND UNIONS BUTTON*****************************/
-/********************************************************************************/
-
-unionButton.addEventListener("click", () => {
-  createTables();
-
-  //Test placing things from desired states box into new box. The code works.
-  /*
-  let desiredStates = document
-    .getElementById("DesiredStates")
-    .value.split("\n");
-  let statesTest = [];
-
-  //Test splitting the Desired States text area.
-  //let desiredStates = desiredStates.value.split("\n");
-  for (let d = 0; d < desiredStates.length; d++) {
-    statesTest.push(desiredStates[d]);
-  }
-
-  finalStates.value = statesTest;*/
-
-  //Test pusing to a textarea with algs in a separate line. Implemented into finalStates stuff above.
-  /*let pushTest = [];
-  pushTest.push("R U R' U R U2 R'");
-  pushTest.push("U2 R U");
-  desiredStates.value = pushTest.join("\n");*/
-});

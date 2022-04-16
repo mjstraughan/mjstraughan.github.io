@@ -18,6 +18,7 @@ textarea {
   width: 400px;
   height: 200px;
   font-family: Arial, Helvetica, sans-serif;
+  background-color: white;
 }
 
 #comboTableContainer {

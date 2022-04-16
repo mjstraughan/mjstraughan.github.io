@@ -42,8 +42,8 @@
     algorithm which can solve to one of the desired end states. The final column
     ("This case unions with") shows the algorithms which cover the missing
     numbers. A list of numbers will be contained here such as "3, 4, 5, 6, 7, 8,
-    9, 10". Each of those cases contains the numbers that are missing from cases
-    which the current row case can't cover.
+    9, 10". Each of those case numbers contain all of the numbers that are
+    missing from cases which the current row case can't cover.
     <br />
     <br />
     <h3>Union Table</h3>
@@ -56,15 +56,30 @@
         the pieces that are involved. Using the COLL+1 LL method as an example,
         input all of the ZBLL algorithms. This is because in COLL+1 all of the
         corners are being solved and all four edges are involved to solve any
-        single edge.
+        single edge. Try using the below algorithms in the Cases input box.
       </li>
+      <ul>
+        <li>(U2) R' U' R U R U R U' R' U R U R2 U' R2 U R</li>
+        <li>(U2) R' U' R U' R U R2 U R2 U2 R'</li>
+        <li>R U R2 F' R U2 R U' R' U' R' F R2 U' R'</li>
+        <li>(U2) R U' R' U' R U2 R' U2 R U R' U2 R U R'</li>
+        <li>R' U2 R2 U R' U R U2 R' U2 R' U2 R</li>
+        <li>(U') R2 U R' U' R' U' R U2 R' U' R2 U' R2</li>
+        <li>(U') R' U2 R U R' U R</li>
+        <li>(U') R2 U' R2 U' R U2 R U' R' U' R U R2</li>
+        <li>R U R2 U' R2 U' R2 U2 R2 U2 R'</li>
+        <li>R U R' U R U2 R'</li>
+        <li>R' F' U' F U R F U R U' R' F'</li>
+        <li>(U') R2 U' R' U' R2 U R U R2 U R' U R</li>
+      </ul>
       <br />
       <li>
         In the second text area input the algorithms for all of the desired end
         states. For COLL+1 this means inputting Ua Perm, Ub Perm, and the solved
         state. For the solved state, just ensure that there is a blank line at
         the bottom of the algorithm list. The algorithms must include all
-        possible pre-AUFs. For COLL+1, this means having:
+        possible pre-AUFs. For COLL+1, this means having the below states. Try
+        inputting them into the Desired States input box.
       </li>
       <ul>
         <li>M2 U M' U2 M U M2</li>

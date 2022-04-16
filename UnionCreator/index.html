@@ -1,1 +1,75 @@
-
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Union Creator</title>
+    <link rel="icon" type="image/x-icon" href="Union.png" />
+    <link rel="stylesheet" href="NewStyle.css" />
+  </head>
+  <body id="Body">
+    <img src="Title.png" width="50%" />
+    <br />
+    <div class="inputContainer">
+      <textarea
+        id="Cases"
+        class="item"
+        placeholder="Enter algorithms for all possible cases"
+      >
+(U2) R' U' R U R U R U' R' U R U R2 U' R2 U R
+(U2) R' U' R U' R U R2 U R2 U2 R'
+R U R2 F' R U2 R U' R' U' R' F R2 U' R'
+(U2) R U' R' U' R U2 R' U2 R U R' U2 R U R'
+R' U2 R2 U R' U R U2 R' U2 R' U2 R
+(U') R2 U R' U' R' U' R U2 R' U' R2 U' R2
+(U') R' U2 R U R' U R
+(U') R2 U' R2 U' R U2 R U' R' U' R U R2
+R U R2 U' R2 U' R2 U2 R2 U2 R'
+R U R' U R U2 R'
+R' F' U' F U R F U R U' R' F'
+(U') R2 U' R' U' R2 U R U R2 U R' U R
+(U2) F U' R' F R2 U R' U' R U R' U' F' R U R' F'
+(U) F R' U R U' F' U R' U' R
+(U') F U2 R' U' R F' R' U R F U2 F'
+R F' U F R F R' F' R' U' F R2 F' R
+(U) R' U' R U F U' R' U' R U F' R' U R
+(U) R' F2 R U R' F' U' F' R' F' R F U F' R
+(U') R' U2 F' R U R' U' R' F R U2 R
+(U') R' U' R' U' R F U' R' U2 R U F' R
+(U2) R U' R' U2 R' U2 R U R' U F R U R U' R' F'
+(U) F U F' U R F R' U' R F' R' F U' F'
+(U2) F' R' U' R F R' U2 R U F' R' U2 R F
+(U2) R U R' F' R U R' U R U' R' U' R' F R2 U' R'
+F R U R' U' F'</textarea
+      >
+      <textarea
+        id="DesiredStates"
+        class="item"
+        placeholder="Enter algorithms for all desired end states"
+      >
+M2 U M' U2 M U M2
+U M2 U M' U2 M U M2
+U2 M2 U M' U2 M U M2
+U' M2 U M' U2 M U M2
+M2 U' M' U2 M U' M2
+U M2 U' M' U2 M U' M2
+U2 M2 U' M' U2 M U' M2
+U' M2 U' M' U2 M U' M2
+U
+U2
+U'
+</textarea
+      >
+      <textarea id="InvolvedPieces" class="item">
+URF, UFL, ULB, UBR, DFR, DLF, DBL, DRB, UFM, ULS, UBM, URS, FRE, FLE, BLE, BRE, DFM, DLS, DBM, DRS, UMS, RES, FME, LES, BME, DMS</textarea
+      >
+      <button id="unionButton">GENERATE UNIONS</button>
+    </div>
+    <br />
+    <a href="Guide.html" id="Guide" target="_blank" rel="noopener noreferrer"
+      >How to use</a
+    >
+    <script src="Script6.js"></script>
+  </body>
+</html>

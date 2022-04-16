@@ -134,7 +134,7 @@ function createTables() {
     let image3D = document.createElement("td");
     let image3DSource =
       "<img src=http://cube.rider.biz/visualcube.php?fmt=png&bg=t&size=100&case=" +
-      inputCases[row] +
+      inputCases[row].replace(/\s/g, "") +
       ">";
     image3D.innerHTML = image3DSource;
     nextRow.appendChild(image3D);
@@ -143,7 +143,7 @@ function createTables() {
     let imageOverhead = document.createElement("td");
     let imageOverheadSource =
       "<img src=http://cube.rider.biz/visualcube.php?fmt=png&bg=t&size=100&view=plan&case=" +
-      inputCases[row] +
+      inputCases[row].replace(/\s/g, "") +
       ">";
     imageOverhead.innerHTML = imageOverheadSource;
     nextRow.appendChild(imageOverhead);

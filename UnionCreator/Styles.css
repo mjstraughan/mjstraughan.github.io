@@ -22,7 +22,7 @@ textarea {
 
 #comboTableContainer {
   overflow: scroll;
-  height: 400px;
+  height: 500px;
   width: 1200px;
   background-color: #002060;
   border: 1px solid white;
@@ -31,14 +31,14 @@ textarea {
 #unionTableContainer {
   overflow-y: auto;
   overflow-x: hidden;
-  height: 400px;
+  height: 500px;
   width: 200px;
   background-color: #002060;
   border: 1px solid white;
 }
 
 #unionTable {
-  height: 400px;
+  height: 500px;
   width: 200px;
 }
 

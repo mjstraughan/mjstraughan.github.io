@@ -11,7 +11,13 @@
 let unionButton = document.querySelector("#unionButton");
 
 unionButton.addEventListener("click", () => {
-  createTables();
+  // Get id for the container that holds the tables.
+  let tables = document.getElementById("tableContainer");
+  // If tables aren't already on the page, create new ones.
+  // If statement can be removed if users want the ability to generate more than one set of tables.
+  if (!tables) {
+    createTables();
+  }
 });
 
 /********************************************************************************/
@@ -24,8 +30,11 @@ clearButton.addEventListener("click", () => {
   /*****Clear the tables*****/
   // Get id for the container that holds the tables.
   let tables = document.getElementById("tableContainer");
+
   // Remove the container.
-  if (tables) tables.parentNode.removeChild(tables);
+  if (tables) {
+    tables.parentNode.removeChild(tables);
+  }
 
   /*****Clear the input boxes*****/ // Will be enabled upon user request.
   /*let inputCases = document.getElementById("Cases");

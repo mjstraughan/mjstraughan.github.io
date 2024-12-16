@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Union Creator Guide</title>
-    <link rel="shortcut icon" type="image/png" href="Union.png">
+    <link rel="shortcut icon" type="image/png" href="Union.png" />
     <link rel="stylesheet" href="GuideStyles.css" />
   </head>
   <body>
@@ -13,50 +13,72 @@
     This program is used to find unions of algorithms which together achieve a
     set of desired states. When all of the text areas are filled in and the
     generate unions button is clicked, two tables are created. A combo table and
-    a union table.
+    a union table. Below is a description of each input and output.
     <br />
     <br />
-    <h3>Combo Table</h3>
-    The left four columns which have the "Cases" header show information about
-    all of the possible cases for the pieces. The case number, two different
-    images, and the algorithm which solves the case in the current row. The next
-    series of columns which have the "Desired end states and resulting
-    combinations" header show the desired end states and which case it produces
-    when crossed with the case algorithm from the fourth column of the current
-    row. The inverse of the desired state is applied to the solved state then
-    the inverse of the case algorithm is applied to that. The result is a number
-    which is one of the cases from the left side. The next column is "Cases this
-    case covers". This shows all of the cases which, if the algorithm in the
-    current row is applied to that case state, will produce one of the desired
-    end states. An algorithm likely won't be able to produce one of the states
-    for every possible case. That's where the unions come in. The final column
-    is "This case unions with". The numbers here show the cases which can be in
-    a union to reach the desired end state in all possible cases. Example for
-    the final two columns: Let's say you are looking at row 1 (case 1) and there
-    is a series of numbers such as "1, 3, 4, 5, 6, 7, 8, 9, 10" in the "Cases
-    this case covers" column. This means that the algorithm in row 1 can solve
-    to one of the desired states if it is used on any of the cases in that list.
-    But for the numbers not in the list, it can't reach one of the desired
-    states. Applying the algorithm to one of those missing numbers leads to some
-    other case which isn't cared about. For the remaining numbers, you need an
-    algorithm which can solve to one of the desired end states. The final column
-    ("This case unions with") shows the algorithms which cover the missing
-    numbers. A list of numbers will be contained here such as "3, 4, 5, 6, 7, 8,
-    9, 10". Each of those case numbers contain all of the numbers that are
-    missing from cases which the current row case can't cover.
+    <h3>Cases</h3>
+    In this box, input the entire list of algorithms that solve all pieces
+    involved in the step.
     <br />
     <br />
-    <h3>Union Table</h3>
-    This table shows all of the possible unions. It is the individual unions
-    separated out of the final column of the combo table.
-    <center><h1>How to use</h1></center>
+    <h3>Desired States</h3>
+    Input the algorithms that solve the end states that you want to be able to
+    solve to.
+    <br />
+    <br />
+    <h3>Involved Stickers</h3>
+    A preset list of cube stickers are provided. If you want to ignore stickers,
+    replace them all with N or any chosen character or set of characters. This
+    will force the internal cube to view those stickers as all the same.
+    <br />
+    <br />
+    <h3>Desired Algorithms</h3>
+    When generating the unions, the program will generate the first one found.
+    If you want the unions to include specific algorithms, imagine a series of
+    numbers, from 1 through the end, to the left of each algorithm in the Cases
+    input box. In the Desired Algorithms box input the algorithm numbers you
+    want and have them separated by spaces. The program will try its best to
+    involve these input algorithm numbers.
+    <br />
+    <br />
+    <h3>Undesired Algorithms</h3>
+    Input the algorithm numbers that you don't want included. If possible, the
+    program will avoid involving those algorithms in the output unions.
+    <br />
+    <br />
+    <h3>Generate Coverage Button</h3>
+    Generates the cases that each algorithm will solve to one of the desired end
+    states. Taking the first line as an example: The first line corresponds with
+    the first algorithm in the Cases input box. The various numbers are a
+    reference to an algorithm number from that same list. If the first algorithm
+    in the list is applied to any of those algorithm numbers after that number
+    has been setup in reverse to produce the case, the algorithm will solve that
+    case to one of the desired end states.
+    <br />
+    <br />
+    <h3>Generate Unions Button</h3>
+    Generates the minimum algorithm numbers required to solve all possible cases
+    to one of the desired end states. Each of the resulting algorithm numbers is
+    capable of covering part of the entire case set. But together, the numbers
+    output to the Unions text box provide full coverage of the entire set to
+    solve to one of the desired end states.
+    <br />
+    <br />
+    <h3>Generate Table Button</h3>
+    This will generate a table that provides a convenient visual of the cases
+    that were input into the Cases text box and the coverage that they provide.
+    It shows the case number, a 3D image, an overhead image, and the resulting
+    cases for each end state.
+    <br />
+    <br />
+    <center><h1>Example</h1></center>
     <ol>
       <li>
-        In the first text area input the algorithms for all possible cases for
+        In the Cases text area input the algorithms for all possible cases for
         the pieces that are involved. Using the COLL+1 LL method as an example,
         input all of the ZBLL algorithms. This is because in COLL+1 all of the
         corners are being solved and all four edges are involved to solve any
-        single edge. Try using the below algorithms in the Cases input box.
+        single edge. Try using the below algorithms in the Cases text area.
       </li>
       <ul>
         <li>(U2) R' U' R U R U R U' R' U R U R2 U' R2 U R</li>
@@ -74,12 +96,12 @@
       </ul>
       <br />
       <li>
-        In the second text area input the algorithms for all of the desired end
-        states. For COLL+1 this means inputting Ua Perm, Ub Perm, and the solved
-        state. For the solved state, just ensure that there is a blank line at
-        the bottom of the algorithm list. The algorithms must include all
-        possible pre-AUFs. For COLL+1, this means having the below states. Try
-        inputting them into the Desired States input box.
+        In the Desired States text area input the algorithms for all of the
+        desired end states. For COLL+1 this means inputting Ua Perm, Ub Perm,
+        and the solved state. For the solved state, just ensure that there is a
+        blank line at the bottom of the algorithm list. The algorithms must
+        include all possible pre-AUFs. For COLL+1, this means having the below
+        states. Try inputting them into the Desired States text area.
       </li>
       <ul>
         <li>M2 U M' U2 M U M2</li>
@@ -97,13 +119,9 @@
       </ul>
       <br />
       <li>
-        In the third text area input the pieces that are involved. A complete
-        list of pieces is included, so just delete the ones that you want to
-        ignore. The piece notation uses NBRS. For example, UFM means the UF edge
-        and UMS means the U layer center.
+        Click the various buttons and the coverage, unions, and table will be
+        created.
       </li>
-      <br />
-      <li>Click the generate unions button and the tables will be created.</li>
     </ol>
     <center><h1>Potential new features</h1></center>
     <ul>

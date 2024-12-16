@@ -1,15 +1,8 @@
+// Created by Michael James Straughan.
+// Cube representation cube by crystalcuber.
+
 // To do:
-// Add the ability to show unions of greater than two.
-// Functionality for using specific pieces. The user inputs the pieces that they care about in the textarea.
 // The ability to save the contents of the tables.
-// Maybe moving the individual turn functions from the cube states function into their own separate functions will make the program faster.
-// Also try moving the state function call to the top of the createTables function as was done with findCoverage and findUnions.
-// Try declaring a global variable like "let involvedPieces = document.getElementById("InvolvedPieces").value.split("\n");"
-///// Then inside the applyAlg function have the cube variable and the code to remove uninvolved pieces.
-// In the compareStates function, combine the main two sets of variables into one set.
-// In the getInverse function, change the final else to an else if for the prime symbol.
-///// Then remove the "(", ")", and whatever else and replace that with a final else which covers
-///// anything that isn't turn notation in an alg.
 // Build a Google Sheets batch solver alg list formatter.
 // Update the various alg checking lines to cover not only ' for prime, but also ’.
 

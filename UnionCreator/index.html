@@ -12,10 +12,12 @@
     <img src="Title.png" width="50%" />
     <br />
 
-    <div class="InputContainer">
+    <div id="InputContainer" class="InputContainer">
       <div class="CasesLabel">Cases</div>
       <div class="StatesLabel">Desired States</div>
-      <div class="PiecesLabel">Involved Pieces</div>
+      <div class="StickersLabel">Involved Stickers</div>
+      <div class="DesiredAlgsLabel">Desired Algorithms</div>
+      <div class="UndesiredAlgsLabel">Undesired Algorithms</div>
       <textarea
         id="Cases"
         class="Cases"
@@ -32,7 +34,19 @@ R' U2 R2 U R' U R U2 R' U2 R' U2 R
 R U R2 U' R2 U' R2 U2 R2 U2 R'
 R U R' U R U2 R'
 R' F' U' F U R F U R U' R' F'
-(U') R2 U' R' U' R2 U R U R2 U R' U R</textarea
+(U') R2 U' R' U' R2 U R U R2 U R' U R
+L' U' L U' L' U2 L
+(U') R U2 R' U' R U' R' 
+(U2) R' F2 R D R' D' F2 U' R2 U R' U' R2
+(U2) R' U' R2 U R2 U R2 U2 R2 U2 R
+(U2) R U2 R2 U2 R2 U R2 U R2 U' R'
+R U R' U R' U' R2 U' R2 U2 R
+(U') R' U' R U R U2 R' U' R' U R U' R U' R'
+(U') R U R' U' R' U' R U R U' R' U' R' U R
+(U') R' U' R U R U2 R' U' R U' R' U R' U R
+(U') R2 U' R' U R U R' U2 R' U R2 U R2
+R U R' U R' U' R U' R' U2 R U R U' R'
+(U') R U R2 F' R U R U R' U2 R' F R2 U' R'</textarea
       >
       <textarea
         id="DesiredStates"
@@ -52,7 +66,7 @@ U2
 U'
 </textarea
       >
-      <textarea id="InvolvedPieces" class="Pieces">
+      <textarea id="InvolvedStickers" class="Stickers">
 ULB
 UBM
 UBR
@@ -108,11 +122,38 @@ DBL
 DBM
 DRB</textarea
       >
-      <button id="unionButton" class="Generate">GENERATE UNIONS</button>
-      <button id="Clear" class="Clear">CLEAR</button>
-      <button id="Guide" class="Guide" onclick="window.open('Guide.html')">
+      <textarea id="DesiredAlgs" class="DesiredAlgs" placeholder=""></textarea>
+      <textarea
+        id="UndesiredAlgs"
+        class="UndesiredAlgs"
+        placeholder=""
+      ></textarea>
+    </div>
+    <div id="ButtonContainer" class="ButtonContainer">
+      <button id="CoverageButton" class="CoverageButton">
+        GENERATE COVERAGE
+      </button>
+      <button id="UnionsButton" class="UnionsButton">GENERATE UNIONS</button>
+      <button id="TableButton" class="TableButton">GENERATE TABLE</button>
+      <button id="ClearOutputButton" class="ClearOutputButton">
+        CLEAR OUTPUT
+      </button>
+      <button id="ClearTableButton" class="ClearTableButton">
+        CLEAR TABLE
+      </button>
+      <button
+        id="GuideButton"
+        class="GuideButton"
+        onclick="window.open('Guide.html')"
+      >
         GUIDE
       </button>
+    </div>
+    <div id="OutputContainer" class="OutputContainer">
+      <div class="CoverageLabel">Coverage</div>
+      <div class="UnionsLabel">Unions</div>
+      <textarea id="Coverage" class="Coverage" placeholder=""></textarea>
+      <textarea id="Unions" class="Unions" placeholder=""></textarea>
     </div>
     <br />
 

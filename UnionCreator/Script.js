@@ -14,53 +14,80 @@
 // Update the various alg checking lines to cover not only ' for prime, but also ’.
 
 function algToArray(algorithm) {
-  // Regular expression to match:
-  // - Face turns: R, L, U, D, F, B
-  // - Slice moves: M, E, S
-  // - Rotations: x, y, z
-  // - Wide turns: r, l, u, d, f, b (lowercase)
-  // - Optional modifiers: ' (prime) or 2 (double)
   const regex = /[RLUDFBMESXYZrludfb]'?2?/g;
   return algorithm.match(regex) || [];
 }
 
 /********************************************************************************/
-/*****************************FIND UNIONS BUTTON*********************************/
+/*****************************COVERAGE BUTTON*********************************/
 /********************************************************************************/
 
-let unionButton = document.querySelector("#unionButton");
+let coverageButton = document.querySelector("#CoverageButton");
 
-unionButton.addEventListener("click", () => {
+coverageButton.addEventListener("click", () => {
+  document.getElementById("Coverage").value = findCoverage();
+});
+
+/********************************************************************************/
+/*****************************TABLE BUTTON*********************************/
+/********************************************************************************/
+
+let tableButton = document.querySelector("#TableButton");
+
+tableButton.addEventListener("click", () => {
   // Get id for the container that holds the tables.
-  let tables = document.getElementById("tableContainer");
+  let table = document.getElementById("comboTableContainer");
   // If tables aren't already on the page, create new ones.
   // If statement can be removed if users want the ability to generate more than one set of tables.
-  if (!tables) {
+  if (!table) {
     createTables();
   }
 });
 
 /********************************************************************************/
-/*****************************CLEAR TABLES BUTTON********************************/
+/*****************************UNIONS BUTTON*********************************/
 /********************************************************************************/
 
-let clearButton = document.querySelector("#Clear");
+let unionsButton = document.querySelector("#UnionsButton");
 
-clearButton.addEventListener("click", () => {
+unionsButton.addEventListener("click", () => {
+  // Get id for the container that holds the tables.
+  /*let tables = document.getElementById("tableContainer");
+  // If tables aren't already on the page, create new ones.
+  // If statement can be removed if users want the ability to generate more than one set of tables.
+  if (!tables) {
+    createTables();
+  }*/
+  document.getElementById("Unions").value = findBestUnions();
+});
+
+/********************************************************************************/
+/*****************************CLEAR OUTPUT BUTTON********************************/
+/********************************************************************************/
+
+let clearOutputButton = document.querySelector("#ClearOutputButton");
+
+clearOutputButton.addEventListener("click", () => {
+  // Clear the coerage and unions output.
+  let coverage = (document.getElementById("Coverage").value = "");
+  let unions = (document.getElementById("Unions").value = "");
+});
+
+/********************************************************************************/
+/*****************************CLEAR TABLE BUTTON********************************/
+/********************************************************************************/
+
+let clearTableButton = document.querySelector("#ClearTableButton");
+
+clearTableButton.addEventListener("click", () => {
   /*****Clear the tables*****/
   // Get id for the container that holds the tables.
-  let tables = document.getElementById("tableContainer");
+  let table = document.getElementById("comboTableContainer");
 
   // Remove the container.
-  if (tables) {
-    tables.parentNode.removeChild(tables);
+  if (table) {
+    table.parentNode.removeChild(table);
   }
-
-  /*****Clear the input boxes*****/ // Will be enabled upon user request.
-  /*let inputCases = document.getElementById("Cases");
-  let desiredStates = document.getElementById("DesiredStates");
-  inputCases.value = "";
-  desiredStates.value = "";*/
 });
 
 /********************************************************************************/
@@ -87,8 +114,6 @@ function multiUnions() {
     }
     coverage.push(rowCoverage); // Add the row coverage array to the main coverage array.
   }
-
-  //
 }
 
 /********************************************************************************/
@@ -102,7 +127,7 @@ function createTables() {
     .getElementById("DesiredStates")
     .value.split("\n");
   // Get all of the unions into a single variable for use throughout the tables.
-  let allUnions = findUnions();
+  //let allUnions = findUnions();
   let allCoverage = findCoverage();
 
   /*****Combo Table*****/
@@ -128,17 +153,9 @@ function createTables() {
   let statesHeader = document.createElement("th");
   statesHeader.innerHTML = "Desired end states and resulting combinations";
   statesHeader.colSpan = desiredStates.length;
-  let coverageHeader = document.createElement("th");
-  coverageHeader.innerHTML = "Cases this case covers";
-  coverageHeader.rowSpan = 2;
-  let unionsHeader = document.createElement("th");
-  unionsHeader.innerHTML = "This case unions with";
-  unionsHeader.rowSpan = 2;
 
   row1.appendChild(casesHeader);
   row1.appendChild(statesHeader);
-  row1.appendChild(coverageHeader);
-  row1.appendChild(unionsHeader);
   comboTableHeader.appendChild(row1);
 
   // Create and add secondary header that lists all desired states.
@@ -217,66 +234,40 @@ function createTables() {
       );
       nextRow.appendChild(crossedCase);
     }
-
-    // Add list of covered cases to the "Cases this case covers" column.
-    let coveredCases = document.createElement("td");
-    // The array element is converted to a set to remove duplicates. Then converted back into an array then to a string.
-    // The string has spaces added after commas and is sorted numerically.
-    coveredCases.innerHTML = String(
-      [...new Set(allCoverage[row])].sort(function (a, b) {
-        return a - b;
-      })
-    ).replace(/,/g, ", ");
-    nextRow.appendChild(coveredCases);
-
-    // Add possible unions to each row.
-    let unionsWith = document.createElement("td");
-    unionsWith.innerHTML = String(allUnions[row]).replace(/,/g, ", "); // Add spacing after commas.
-    nextRow.appendChild(unionsWith);
-
     // Add the current row to the comboTable.
     comboTable.appendChild(nextRow);
   }
+}
 
-  /*****Union Table*****/
+/********************************************************************************/
+/*****************************CROSS CASES FUNCTION*******************************/
+/********************************************************************************/
 
-  // Create and add main union table elements.
-  let unionTableContainer = document.createElement("div");
-  unionTableContainer.id = "unionTableContainer";
-  let unionTable = document.createElement("Table");
-  unionTable.id = "unionTable";
-  let unionTableHeader = document.createElement("THead");
-  let unionTableBody = document.createElement("TBody");
+function crossCases() {
+  // Add covered cases list and list of cases the current case can union with.
+  let inputCases = document.getElementById("Cases").value.split("\n");
+  let desiredStates = document
+    .getElementById("DesiredStates")
+    .value.split("\n");
+  let crossedCases = [];
 
-  unionTable.appendChild(unionTableHeader);
-  unionTable.appendChild(unionTableBody);
-
-  unionTableContainer.append(unionTable);
-  document.getElementById("Body").appendChild(unionTableContainer);
-
-  // Create and add top header
-  let unionRow1 = document.createElement("tr");
-  let unionMainHeader = document.createElement("th");
-  unionMainHeader.innerHTML = "Unions";
-  unionRow1.appendChild(unionMainHeader);
-  unionTableHeader.appendChild(unionRow1);
-
-  // Add rows for each possible union.
-  for (u = 0; u < allUnions.length; u++) {
-    let unionRow2 = document.createElement("tr");
-    let unionSet = document.createElement("td");
-    unionSet.innerHTML = String(allUnions[u]).replace(/,/g, ", ");
-    unionRow2.appendChild(unionSet);
-
-    unionTable.appendChild(unionRow2);
+  // Populate crossedCases
+  for (let row = 0; row < inputCases.length; row++) {
+    for (let col = 0; col < desiredStates.length; col++) {
+      crossedCases.push(compareStates(desiredStates[col], inputCases[row]));
+    }
   }
 
-  // Create a main table container to hold the combo table and the union table.
-  let tableContainer = document.createElement("div");
-  tableContainer.id = "tableContainer";
-  tableContainer.append(comboTableContainer);
-  tableContainer.append(unionTableContainer);
-  document.getElementById("Body").appendChild(tableContainer);
+  // Split crossedCases into groups based on desiredStates length
+  let groupedCases = [];
+  for (let i = 0; i < crossedCases.length; i += desiredStates.length) {
+    groupedCases.push(
+      crossedCases.slice(i, i + desiredStates.length).join(", ")
+    );
+  }
+
+  // Return the formatted result
+  return groupedCases.join("\n");
 }
 
 /********************************************************************************/
@@ -300,8 +291,20 @@ function findCoverage() {
     findUnionsCasesCoverage.push(findUnionsRowCoverage); // Add the row coverage array to the main coverage array. This creates an array for later use.
   }
 
-  // Return the covered cases.
-  return findUnionsCasesCoverage;
+  // Sort coverage and accumulate the results into sortedCoverage
+  let sortedCoverage = "";
+  for (let row = 0; row < inputCases.length; row++) {
+    // Process and format the current row
+    let sortedRow = [...new Set(findUnionsCasesCoverage[row])]
+      .sort((a, b) => a - b) // Sort numerically
+      .join(", "); // Convert to a string with ", " separator
+
+    // Append to the final result with a newline for clarity
+    sortedCoverage += (row > 0 ? "\n" : "") + sortedRow;
+  }
+
+  // Return the covered cases
+  return sortedCoverage;
 }
 
 /********************************************************************************/
@@ -379,7 +382,110 @@ function findUnions() {
   }
 
   getCombinations(0, [], new Set());
-  return combinations;
+
+  return combinations.join("\n");
+}
+
+/********************************************************************************/
+/*****************************FIND BEST UNIONS FUNCTION*******************************/
+/********************************************************************************/
+
+function findBestUnions() {
+  let inputCases = document.getElementById("Cases").value.split("\n");
+  let desiredStates = document
+    .getElementById("DesiredStates")
+    .value.split("\n");
+  // Parse user-specified sets from DesiredAlgs input
+  let desiredAlgs = document
+    .getElementById("DesiredAlgs")
+    .value.split(" ")
+    .map(Number);
+  let undesiredAlgs = document
+    .getElementById("UndesiredAlgs")
+    .value.split(" ")
+    .map(Number);
+  let cover = [];
+  let uncovered = [
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+    22, 23, 24,
+  ];
+
+  // Step 1: Find all cases which the current row case can solve to the desired states.
+  // This is the same as the crossed cases process used in the previous columns.
+  // An array of a list of numbers for each row is produced. Each one fills the "Cases this case covers" column
+  // Each row of covered cases is pushed to the findUnionsCasesCoverage array.
+
+  // Create a main array to contain the coverage for each case.
+  let findUnionsCasesCoverage = [];
+
+  for (let row = 0; row < inputCases.length; row++) {
+    let findUnionsRowCoverage = []; // Variable to push the covered cases for the current row.
+    for (let col = 0; col < desiredStates.length; col++) {
+      findUnionsRowCoverage.push(
+        compareStates(desiredStates[col], inputCases[row])
+      ); // Add the current case to the row coverage.
+    }
+    findUnionsCasesCoverage.push(findUnionsRowCoverage); // Add the row coverage array to the main coverage array.
+  }
+
+  //Sort each array and remove any duplicates.
+  findUnionsCasesCoverage = findUnionsCasesCoverage.map((subArray) =>
+    [...new Set(subArray)].sort((a, b) => a - b)
+  );
+
+  // Flatten all sets into a single array to calculate universal coverage
+  const universalSet = [...new Set(findUnionsCasesCoverage.flat())];
+
+  let covered = new Set(); // Elements already covered
+  let selectedSets = []; // Indices of selected sets
+  let remainingSets = findUnionsCasesCoverage.map((set, index) => ({
+    set: new Set(set),
+    index,
+  }));
+
+  // Step 1: Prioritize user-specified desired sets
+  desiredAlgs.forEach((algIndex) => {
+    const desiredSet = remainingSets.find((s) => s.index === algIndex - 1); // Adjust for 1-based input
+    if (desiredSet && !selectedSets.includes(desiredSet.index)) {
+      selectedSets.push(desiredSet.index);
+      desiredSet.set.forEach((element) => covered.add(element));
+      remainingSets = remainingSets.filter((s) => s.index !== desiredSet.index); // Remove used set
+    }
+  });
+
+  // Step 2: Filter out undesired sets
+  remainingSets = remainingSets.filter(
+    (s) => !undesiredAlgs.includes(s.index + 1)
+  ); // Adjust for 1-based indexing
+
+  // Step 3: Apply greedy algorithm for remaining sets
+  while (covered.size < universalSet.length) {
+    let bestSet = null;
+    let maxUncovered = 0;
+
+    // Find the set that covers the most uncovered elements
+    for (const { set, index } of remainingSets) {
+      const uncovered = [...set].filter(
+        (element) => !covered.has(element)
+      ).length;
+      if (uncovered > maxUncovered) {
+        maxUncovered = uncovered;
+        bestSet = index;
+      }
+    }
+
+    // If no set can cover any new elements, terminate to avoid infinite loop
+    if (!bestSet && maxUncovered === 0) break;
+
+    // Add the best set to the solution
+    const selectedSet = remainingSets.find((s) => s.index === bestSet);
+    selectedSets.push(selectedSet.index);
+    selectedSet.set.forEach((element) => covered.add(element));
+    remainingSets = remainingSets.filter((s) => s.index !== selectedSet.index); // Remove used set
+  }
+
+  // Return the indices of selected sets sorted numerically (convert to 1-based indexing for user convenience)
+  return selectedSets.map((index) => index + 1).sort((a, b) => a - b);
 }
 
 /********************************************************************************/
@@ -473,6 +579,10 @@ function getInverse(individualCase) {
     } else if (individualCase[i] == ")") {
       // If the current character is ")", ignore it and continue.
       continue;
+    } else if (individualCase[i] == "'" && individualCase[i - 1] == "2") {
+      // If the current character is 2, add it and the letter turn then move two characters backwards.
+      inverseCase += individualCase[i - 2] += "2 ";
+      i -= 2;
     } else if (individualCase[i] == "'") {
       // If the current character is the prime symbol, remove it, keep the letter turn, and move two characters backwards.
       inverseCase += individualCase[i - 1] += " ";

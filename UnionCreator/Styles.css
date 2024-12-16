@@ -24,7 +24,11 @@ textarea {
 #comboTableContainer {
   overflow: scroll;
   height: 500px;
-  width: 1200px;
+  max-width: 90%;
+  padding: 10px;
+  display: flex;
+  margin: auto;
+  justify-content: space-evenly;
   background-color: #002060;
   border: 1px solid white;
 }
@@ -73,8 +77,8 @@ table thead {
   background-color: #002060;
 }
 
-#unionButton {
-  height: 70%;
+#CoverageButton {
+  height: 100%;
   width: 100%;
   color: #fff !important;
   background: #002060;
@@ -86,7 +90,7 @@ table thead {
   margin-top: auto;
 }
 
-#unionButton:hover {
+#CoverageButton:hover {
   background: #003bb0;
   letter-spacing: 1px;
   -webkit-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
@@ -95,8 +99,52 @@ table thead {
   transition: all 0.4s ease 0s;
 }
 
-#Clear {
-  height: 70%;
+#UnionsButton {
+  height: 100%;
+  width: 100%;
+  color: #fff !important;
+  background: #002060;
+  padding: 15px;
+  border-radius: 5px;
+  display: inline-block;
+  border: solid;
+  transition: all 0.4s ease 0s;
+  margin-top: auto;
+}
+
+#UnionsButton:hover {
+  background: #003bb0;
+  letter-spacing: 1px;
+  -webkit-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+  -moz-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+  box-shadow: 5px 40px -10px rgba(0, 0, 0, 0.57);
+  transition: all 0.4s ease 0s;
+}
+
+#TableButton {
+  height: 100%;
+  width: 100%;
+  color: #fff !important;
+  background: #002060;
+  padding: 15px;
+  border-radius: 5px;
+  display: inline-block;
+  border: solid;
+  transition: all 0.4s ease 0s;
+  margin-top: auto;
+}
+
+#TableButton:hover {
+  background: #003bb0;
+  letter-spacing: 1px;
+  -webkit-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+  -moz-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+  box-shadow: 5px 40px -10px rgba(0, 0, 0, 0.57);
+  transition: all 0.4s ease 0s;
+}
+
+#ClearOutputButton {
+  height: 100%;
   width: 100%;
   color: #fff !important;
   background: #c60000;
@@ -108,7 +156,7 @@ table thead {
   margin-top: auto;
 }
 
-#Clear:hover {
+#ClearOutputButton:hover {
   background: #ff6a6a;
   letter-spacing: 1px;
   -webkit-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
@@ -117,8 +165,30 @@ table thead {
   transition: all 0.4s ease 0s;
 }
 
-#Guide {
-  height: 70%;
+#ClearTableButton {
+  height: 100%;
+  width: 100%;
+  color: #fff !important;
+  background: #c60000;
+  padding: 15px;
+  border-radius: 5px;
+  display: inline-block;
+  border: solid;
+  transition: all 0.4s ease 0s;
+  margin-top: auto;
+}
+
+#ClearTableButton:hover {
+  background: #ff6a6a;
+  letter-spacing: 1px;
+  -webkit-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+  -moz-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+  box-shadow: 5px 40px -10px rgba(0, 0, 0, 0.57);
+  transition: all 0.4s ease 0s;
+}
+
+#GuideButton {
+  height: 100%;
   width: 100%;
   color: #fff !important;
   background: #009100;
@@ -130,7 +200,7 @@ table thead {
   margin-top: auto;
 }
 
-#Guide:hover {
+#GuideButton:hover {
   background: #29e000;
   letter-spacing: 1px;
   -webkit-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
@@ -139,49 +209,150 @@ table thead {
   transition: all 0.4s ease 0s;
 }
 
-.InputContainer {
-  width: 88%;
+#InputContainer {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-rows: 0.8fr 2fr 2fr 1.9fr;
-  gap: 0px 5px;
-  grid-template-areas:
-    "CasesLabel StatesLabel PiecesLabel Generate"
-    "Cases States Pieces Generate"
-    "Cases States Pieces Clear"
-    "Cases States Pieces Guide";
-  margin: auto;
+  grid-template-columns: repeat(5, 1fr); /* Five equal-width columns */
+  grid-template-rows: auto auto auto; /* Three rows: labels, text areas, buttons */
+  gap: 10px; /* Spacing between grid items */
+  max-width: 90%; /* Constrain the overall width */
+  margin: 0 auto; /* Center the grid horizontally */
+}
+
+/* Labels span the first row */
+.CasesLabel,
+.StatesLabel,
+.StickersLabel,
+.DesiredAlgsLabel,
+.UndesiredAlgsLabel {
+  grid-row: 1; /* First row */
+}
+
+.CasesLabel {
+  grid-column: 1;
+}
+.StatesLabel {
+  grid-column: 2;
+}
+.StickersLabel {
+  grid-column: 3;
+}
+.DesiredAlgsLabel {
+  grid-column: 4;
+}
+.UndesiredAlgsLabel {
+  grid-column: 5;
+}
+
+/* Text areas span the second row */
+textarea {
+  width: 100%; /* Ensure text areas fit within their grid cells */
+  resize: vertical; /* Allow vertical resizing only */
 }
 
 .Cases {
-  grid-area: Cases;
+  grid-column: 1;
+  grid-row: 2; /* Second row */
 }
+
 .States {
-  grid-area: States;
+  grid-column: 2;
+  grid-row: 2;
 }
-.Pieces {
-  grid-area: Pieces;
+
+.Stickers {
+  grid-column: 3;
+  grid-row: 2;
 }
-.Generate {
-  grid-area: Generate;
+
+.DesiredAlgs {
+  grid-column: 4;
+  grid-row: 2;
 }
-.Clear {
-  grid-area: Clear;
+
+.UndesiredAlgs {
+  grid-column: 5;
+  grid-row: 2;
 }
-.Guide {
-  grid-area: Guide;
+
+#ButtonContainer {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr); /* Five equal-width columns */
+  grid-template-rows: auto auto auto; /* Three rows: labels, text areas, buttons */
+  gap: 10px; /* Spacing between grid items */
+  max-width: 90%; /* Constrain the overall width */
+  margin: 0 auto; /* Center the grid horizontally */
 }
-.CasesLabel {
-  grid-area: CasesLabel;
-  font-weight: bold;
+
+button {
+  width: 100%;
+  padding: 10px;
+  text-align: center;
 }
-.StatesLabel {
-  grid-area: StatesLabel;
-  font-weight: bold;
+
+.CoverageButton {
+  grid-column: 1;
+  grid-row: 1;
 }
-.PiecesLabel {
-  grid-area: PiecesLabel;
-  font-weight: bold;
+
+.UnionsButton {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.tABLEButton {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+.ClearOutputButton {
+  grid-column: 4;
+  grid-row: 1;
+}
+
+.ClearTableButton {
+  grid-column: 5;
+  grid-row: 1;
+}
+
+.GuideButton {
+  grid-column: 6;
+  grid-row: 1;
+}
+
+#OutputContainer {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Five equal-width columns */
+  grid-template-rows: auto auto auto; /* Three rows: labels, text areas, buttons */
+  gap: 10px; /* Spacing between grid items */
+  max-width: 90%; /* Constrain the overall width */
+  margin: 0 auto; /* Center the grid horizontally */
+}
+
+/* Buttons span the third row */
+button {
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+}
+
+.CoverageLabel {
+  grid-column: 1;
+  grid-row: 1; /* Third row */
+}
+
+.UnionsLabel {
+  grid-column: 2;
+  grid-row: 1; /* Third row */
+}
+
+.Coverage {
+  grid-column: 1;
+  grid-row: 2; /* Third row */
+}
+
+.Unions {
+  grid-column: 2;
+  grid-row: 2; /* Third row */
 }
 
 /*.item {
@@ -241,17 +412,17 @@ table thead {
   box-shadow: inset 2px 2px 5px 0 rgba(#fff, 0.5);
 }
 
-#InvolvedPieces::-webkit-scrollbar {
+#InvolvedStickers::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
 
-#InvolvedPieces::-webkit-scrollbar-track {
+#InvolvedStickers::-webkit-scrollbar-track {
   background-color: #e4e4e4;
   border-radius: 100px;
 }
 
-#InvolvedPieces::-webkit-scrollbar-thumb {
+#InvolvedStickers::-webkit-scrollbar-thumb {
   border-radius: 100px;
   background-image: linear-gradient(180deg, #bfbfbf 0%, #808080 99%);
   box-shadow: inset 2px 2px 5px 0 rgba(#fff, 0.5);

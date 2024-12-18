@@ -92,7 +92,7 @@ table thead {
 
 #CoverageButton:hover {
   background: #003bb0;
-  letter-spacing: 1px;
+  letter-spacing: 0.75px;
   -webkit-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
   -moz-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
   box-shadow: 5px 40px -10px rgba(0, 0, 0, 0.57);
@@ -143,28 +143,8 @@ table thead {
   transition: all 0.4s ease 0s;
 }
 
-#ClearOutputButton {
-  height: 100%;
-  width: 100%;
-  color: #fff !important;
-  background: #c60000;
-  padding: 15px;
-  border-radius: 5px;
-  display: inline-block;
-  border: solid;
-  transition: all 0.4s ease 0s;
-  margin-top: auto;
-}
-
-#ClearOutputButton:hover {
-  background: #ff6a6a;
-  letter-spacing: 1px;
-  -webkit-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
-  -moz-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
-  box-shadow: 5px 40px -10px rgba(0, 0, 0, 0.57);
-  transition: all 0.4s ease 0s;
-}
-
+#StopButton,
+#ClearOutputButton,
 #ClearTableButton {
   height: 100%;
   width: 100%;
@@ -178,6 +158,8 @@ table thead {
   margin-top: auto;
 }
 
+#StopButton:hover,
+#ClearOutputButton:hover,
 #ClearTableButton:hover {
   background: #ff6a6a;
   letter-spacing: 1px;
@@ -301,7 +283,7 @@ select {
 
 #ButtonContainer {
   display: grid;
-  grid-template-columns: repeat(6, 1fr); /* Five equal-width columns */
+  grid-template-columns: repeat(7, 1fr); /* Five equal-width columns */
   grid-template-rows: auto auto auto; /* Three rows: labels, text areas, buttons */
   gap: 10px; /* Spacing between grid items */
   max-width: 90%; /* Constrain the overall width */
@@ -324,23 +306,28 @@ button {
   grid-row: 1;
 }
 
-.tABLEButton {
+.TableButton {
   grid-column: 3;
   grid-row: 1;
 }
 
-.ClearOutputButton {
+.StopButton {
   grid-column: 4;
   grid-row: 1;
 }
 
-.ClearTableButton {
+.ClearOutputButton {
   grid-column: 5;
   grid-row: 1;
 }
 
-.GuideButton {
+.ClearTableButton {
   grid-column: 6;
+  grid-row: 1;
+}
+
+.GuideButton {
+  grid-column: 7;
   grid-row: 1;
 }
 

@@ -15,11 +15,11 @@ function algToArray(algorithm) {
 /*****************************COVERAGE BUTTON*********************************/
 /********************************************************************************/
 
-let coverageButton = document.querySelector("#CoverageButton");
+/*let coverageButton = document.querySelector("#CoverageButton");
 
 coverageButton.addEventListener("click", () => {
   findCoverage();
-});
+});*/
 
 /********************************************************************************/
 /*****************************TABLE BUTTON*********************************/
@@ -46,6 +46,20 @@ let unionsButton = document.querySelector("#UnionsButton");
 unionsButton.addEventListener("click", () => {
   findBestUnions();
 });
+
+/********************************************************************************/
+/**********************************STOP BUTTON***********************************/
+/********************************************************************************/
+
+let stopRequested = false; // Tracks if the Stop button is clicked
+
+document
+  .getElementById("StopButton")
+  .addEventListener("click", handleStopButton);
+
+function handleStopButton() {
+  stopRequested = true; // Set the stop flag to true
+}
 
 /********************************************************************************/
 /*****************************CLEAR OUTPUT BUTTON********************************/
@@ -396,47 +410,88 @@ function findUnions() {
 /*****************************FIND BEST UNIONS FUNCTION*******************************/
 /********************************************************************************/
 
-function findBestUnions() {
-  let inputCases = document.getElementById("Cases").value.split("\n");
-  let desiredStates = document
+let coverageGenerated = false; // Track if coverage calculation has been done
+let findUnionsCasesCoverage = [];
+let universalSet = new Set();
+let remainingSets = [];
+let selectedSets = [];
+let covered = new Set();
+let stepCount = 0;
+
+// Bind buttons to functions
+document
+  .getElementById("CoverageButton")
+  .addEventListener("click", handleCoverageButton);
+document
+  .getElementById("UnionsButton")
+  .addEventListener("click", handleUnionsButton);
+
+function handleCoverageButton() {
+  const coverageTextArea = document.getElementById("Coverage");
+  coverageTextArea.value = ""; // Clear previous text
+
+  // Reset state and stop flag
+  stopRequested = false; // Allow the process to run again
+  resetState();
+
+  // Start coverage calculation
+  calculateCoverage(coverageTextArea);
+}
+
+function handleUnionsButton() {
+  const unionsTextArea = document.getElementById("Unions");
+  unionsTextArea.value = ""; // Clear previous text
+
+  // Reset stop flag to allow the process
+  stopRequested = false;
+
+  if (coverageGenerated) {
+    // If coverage has been generated, proceed to finalize and run greedyStep
+    finalizeCoverage(unionsTextArea);
+    greedyStep(unionsTextArea);
+  } else {
+    unionsTextArea.value =
+      "Coverage must be calculated first using the CoverageButton.";
+  }
+}
+
+function resetState() {
+  // Reset global state
+  findUnionsCasesCoverage = [];
+  universalSet = new Set();
+  remainingSets = [];
+  selectedSets = [];
+  covered = new Set();
+  stepCount = 0;
+  coverageGenerated = false;
+}
+
+function calculateCoverage(textArea) {
+  textArea.value += "Step 1: Calculating case coverage...\n";
+  const inputCases = document.getElementById("Cases").value.split("\n");
+  const desiredStates = document
     .getElementById("DesiredStates")
     .value.split("\n");
-  let desiredAlgs = document
-    .getElementById("DesiredAlgs")
-    .value.split(" ")
-    .map(Number);
-  let undesiredAlgs = document
-    .getElementById("UndesiredAlgs")
-    .value.split(" ")
-    .map(Number);
 
-  const textArea = document.getElementById("Unions");
-  textArea.value = ""; // Clear the text area
+  let row = 0;
 
-  let findUnionsCasesCoverage = [];
-  let universalSet = new Set();
-  let remainingSets = [];
-  let selectedSets = [];
-  let covered = new Set();
-  let stepCount = 0;
+  function processRow() {
+    // Check if stop was requested
+    if (stopRequested) {
+      textArea.value += "\nProcess stopped by user.\n";
+      return; // Exit the function
+    }
 
-  function updateTextArea(text) {
-    // Update the text area and ensure the browser renders it
-    textArea.value += text + "\n";
-    textArea.scrollTop = textArea.scrollHeight; // Auto-scroll to the bottom
-  }
+    // Exit condition
+    if (row >= inputCases.length) {
+      coverageGenerated = true; // Mark coverage as complete
+      textArea.value += "Coverage calculation completed.\n";
+      textArea.scrollTop = textArea.scrollHeight;
+      return;
+    }
 
-  function calculateCoverage() {
-    updateTextArea("Step 1: Calculating case coverage...");
-
-    let row = 0;
-
-    function processRow() {
-      if (row >= inputCases.length) {
-        finalizeCoverage();
-        return;
-      }
-
+    // Process the current row only once
+    if (!findUnionsCasesCoverage[row]) {
       let findUnionsRowCoverage = [];
       for (let col = 0; col < desiredStates.length; col++) {
         findUnionsRowCoverage.push(
@@ -444,95 +499,130 @@ function findBestUnions() {
         );
       }
 
-      findUnionsCasesCoverage.push(
-        [...new Set(findUnionsRowCoverage)].sort((a, b) => a - b)
+      // Cache and log the current row's results
+      findUnionsCasesCoverage[row] = [...new Set(findUnionsRowCoverage)].sort(
+        (a, b) => a - b
       );
       universalSet = new Set([...universalSet, ...findUnionsRowCoverage]);
 
-      // Update text area for every individual case
-      updateTextArea(`Processed ${row + 1}/${inputCases.length} cases...`);
-
-      row++;
-      setTimeout(processRow, 0); // Yield control back to the browser
+      // Log the processed row
+      textArea.value += `${row + 1}: ${findUnionsCasesCoverage[row].join(
+        ", "
+      )}\n`;
+      textArea.scrollTop = textArea.scrollHeight;
     }
 
-    setTimeout(processRow, 0);
+    row++;
+    setTimeout(processRow, 0); // Continue processing asynchronously
   }
 
-  function finalizeCoverage() {
-    updateTextArea("\nStep 2: Prioritizing user-specified desired sets...");
+  // Start processing rows sequentially
+  processRow();
+}
 
-    remainingSets = findUnionsCasesCoverage.map((set, index) => ({
-      set: new Set(set),
-      index,
-    }));
+function finalizeCoverage(textArea) {
+  const desiredAlgs = document
+    .getElementById("DesiredAlgs")
+    .value.split(" ")
+    .map(Number)
+    .filter((num) => !isNaN(num) && num > 0); // Clean input: positive numbers only
 
-    desiredAlgs.forEach((algIndex) => {
-      const desiredSet = remainingSets.find((s) => s.index === algIndex - 1);
-      if (desiredSet && !selectedSets.includes(desiredSet.index)) {
-        selectedSets.push(desiredSet.index);
-        desiredSet.set.forEach((element) => covered.add(element));
-        remainingSets = remainingSets.filter(
-          (s) => s.index !== desiredSet.index
-        );
-        updateTextArea(`Selected desired set ${algIndex}.`);
-      }
-    });
+  const undesiredAlgs = document
+    .getElementById("UndesiredAlgs")
+    .value.split(" ")
+    .map(Number)
+    .filter((num) => !isNaN(num) && num > 0); // Clean input: positive numbers only
 
-    updateTextArea("\nStep 3: Filtering out undesired sets...");
-    remainingSets = remainingSets.filter(
-      (s) => !undesiredAlgs.includes(s.index + 1)
-    );
+  textArea.value += "\nStep 2: Prioritizing user-specified desired sets...\n";
 
-    greedyStep(); // Proceed to Step 4 (Greedy Algorithm)
+  // Reset selected sets and covered elements for a fresh calculation
+  selectedSets = [];
+  covered = new Set();
+
+  remainingSets = findUnionsCasesCoverage.map((set, index) => ({
+    set: new Set(set),
+    index,
+  }));
+
+  // Prioritize user-specified desired sets
+  desiredAlgs.forEach((algIndex) => {
+    const desiredSet = remainingSets.find((s) => s.index === algIndex - 1);
+    if (desiredSet && !selectedSets.includes(desiredSet.index)) {
+      selectedSets.push(desiredSet.index);
+      desiredSet.set.forEach((element) => covered.add(element));
+
+      remainingSets = remainingSets.filter((s) => s.index !== desiredSet.index);
+
+      textArea.value += `Selected desired set ${algIndex}.\n`;
+    } else {
+      textArea.value += `Warning: Desired set ${algIndex} not found or already selected.\n`;
+    }
+  });
+
+  // Remove undesired sets
+  textArea.value += "\nStep 3: Filtering out undesired sets...\n";
+  remainingSets = remainingSets.filter(
+    (s) => !undesiredAlgs.includes(s.index + 1)
+  );
+
+  if (undesiredAlgs.length > 0) {
+    textArea.value += `Filtered out undesired sets: ${undesiredAlgs.join(
+      ", "
+    )}.\n`;
+  }
+}
+
+function greedyStep(textArea) {
+  // Stop if requested
+  if (stopRequested) {
+    textArea.value += "\nProcess stopped by user.\n";
+    return;
   }
 
-  function greedyStep() {
-    if (covered.size >= universalSet.size || remainingSets.length === 0) {
-      const finalSets = selectedSets
-        .map((index) => index + 1)
-        .sort((a, b) => a - b);
-      updateTextArea(
-        `\nCoverage complete.\nTotal algorithms in the union: ${
-          finalSets.length
-        }\nFinal selected algorithms: ${finalSets.join(", ")}`
-      );
-      return;
-    }
-
-    let bestSet = null;
-    let maxUncovered = 0;
-
-    for (const { set, index } of remainingSets) {
-      const uncoveredCount = [...set].filter(
-        (element) => !covered.has(element)
-      ).length;
-      if (uncoveredCount > maxUncovered) {
-        maxUncovered = uncoveredCount;
-        bestSet = index;
-      }
-    }
-
-    if (bestSet === null) return;
-
-    const selectedSet = remainingSets.find((s) => s.index === bestSet);
-    selectedSets.push(selectedSet.index);
-    selectedSet.set.forEach((element) => covered.add(element));
-    remainingSets = remainingSets.filter((s) => s.index !== selectedSet.index);
-
-    stepCount++;
-    if (stepCount % 5 === 0 || covered.size === universalSet.size) {
-      updateTextArea(
-        `Step ${stepCount}: Selected set ${bestSet + 1}, coverage progress: ${
-          covered.size
-        }/${universalSet.size}`
-      );
-    }
-
-    setTimeout(greedyStep, 0); // Yield control back to the browser
+  if (covered.size >= universalSet.size || remainingSets.length === 0) {
+    const finalSets = selectedSets
+      .map((index) => index + 1)
+      .sort((a, b) => a - b);
+    textArea.value += `\nCoverage complete.\nTotal algorithms in the union: ${
+      finalSets.length
+    }\nFinal selected algorithms: ${finalSets.join(", ")}\n`;
+    return;
   }
 
-  calculateCoverage(); // Start the calculation
+  let bestSet = null;
+  let maxUncovered = 0;
+
+  for (const { set, index } of remainingSets) {
+    const uncoveredCount = [...set].filter(
+      (element) => !covered.has(element)
+    ).length;
+    if (uncoveredCount > maxUncovered) {
+      maxUncovered = uncoveredCount;
+      bestSet = index;
+    }
+  }
+
+  if (bestSet === null) return;
+
+  const selectedSet = remainingSets.find((s) => s.index === bestSet);
+  selectedSets.push(selectedSet.index);
+  selectedSet.set.forEach((element) => covered.add(element));
+  remainingSets = remainingSets.filter((s) => s.index !== selectedSet.index);
+
+  stepCount++;
+  if (stepCount % 5 === 0 || covered.size === universalSet.size) {
+    textArea.value += `Step ${stepCount}: Selected set ${
+      bestSet + 1
+    }, coverage progress: ${covered.size}/${universalSet.size}\n`;
+    textArea.scrollTop = textArea.scrollHeight;
+  }
+
+  setTimeout(() => greedyStep(textArea), 0);
+}
+
+function compareStates(state1, state2) {
+  // Dummy compare function; replace with your actual logic
+  return state1 === state2 ? 1 : 0;
 }
 
 /********************************************************************************/
@@ -750,7 +840,7 @@ function applyAlg(individualCase) {
 }
 
 /********************************************************************************/
-/*****************************ALG SETS SELECTOR**********************************/
+/***********************************SELECTORS************************************/
 /********************************************************************************/
 
 let algLists = {};
@@ -760,8 +850,8 @@ let stateLists = {};
 fetch("AlgLists.json")
   .then((response) => response.json())
   .then((data) => {
-    algLists = data; // Store the data in the 'algLists' object
-    updateAlgList(); // Initialize the textarea for AlgSet
+    algLists = data; // Store the AlgLists data
+    updateAlgList();
   })
   .catch((error) => console.error("Error loading AlgLists:", error));
 
@@ -769,8 +859,8 @@ fetch("AlgLists.json")
 fetch("StateLists.json")
   .then((response) => response.json())
   .then((data) => {
-    stateLists = data; // Store the data in the 'stateLists' object
-    updateStateList(); // Initialize the textarea for StateSet
+    stateLists = data; // Store the StateLists data
+    updateStateList();
   })
   .catch((error) => console.error("Error loading StateLists:", error));
 

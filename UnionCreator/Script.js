@@ -7,7 +7,7 @@
 // Update the various alg checking lines to cover not only ' for prime, but also ’.
 
 function algToArray(algorithm) {
-  const regex = /[RLUDFBMESXYZrludfb]'?2?/g;
+  const regex = /[RLUDFBMESxyzrludfb]'?2?/g;
   return algorithm.match(regex) || [];
 }
 

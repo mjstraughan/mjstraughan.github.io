@@ -6,15 +6,6 @@
 // Build a Google Sheets batch solver alg list formatter.
 // Update the various alg checking lines to cover not only ' for prime, but also ’.
 
-function algToArray(algorithm) {
-  const regex = /[RLUDFBMESxyzrludfb]'?2?/g;
-  return algorithm.match(regex) || [];
-}
-
-/********************************************************************************/
-/*****************************COVERAGE BUTTON*********************************/
-/********************************************************************************/
-
 /*let coverageButton = document.querySelector("#CoverageButton");
 
 coverageButton.addEventListener("click", () => {
@@ -22,7 +13,7 @@ coverageButton.addEventListener("click", () => {
 });*/
 
 /********************************************************************************/
-/*****************************TABLE BUTTON*********************************/
+/********************************TABLE BUTTON************************************/
 /********************************************************************************/
 
 let tableButton = document.querySelector("#TableButton");
@@ -741,6 +732,15 @@ function getInverse(individualCase) {
   }
 
   return inverseCase;
+}
+
+/********************************************************************************/
+/*******************************ALG CONVERTER************************************/
+/********************************************************************************/
+
+function algToArray(algorithm) {
+  const regex = /[RLUDFBMESxyzrludfb]'?2?/g;
+  return algorithm.match(regex) || [];
 }
 
 /********************************************************************************/

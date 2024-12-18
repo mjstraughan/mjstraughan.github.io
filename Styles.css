@@ -1,0 +1,456 @@
+body,
+html {
+  background-image: url("./UnionBackground.png");
+  background-color: #002060;
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  text-align: center;
+  /*width: 100vw;*/
+  margin: 0 auto;
+  position: relative;
+  font-family: Arial, Helvetica, sans-serif;
+  color: white;
+}
+
+textarea {
+  width: 400px;
+  height: 200px;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: white;
+}
+
+#comboTableContainer {
+  overflow: scroll;
+  height: 500px;
+  max-width: 90%;
+  padding: 10px;
+  display: flex;
+  margin: auto;
+  justify-content: space-evenly;
+  background-color: #002060;
+  border: 1px solid white;
+}
+
+#unionTableContainer {
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 500px;
+  width: 200px;
+  background-color: #002060;
+  border: 1px solid white;
+}
+
+#unionTable {
+  height: 500px;
+  width: 200px;
+}
+
+#tableContainer {
+  height: 500px;
+  width: 1500px;
+  padding: 10px;
+  display: flex;
+  margin: auto;
+  justify-content: space-evenly;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+table th,
+table td {
+  max-width: 100%;
+  padding: 8px 16px;
+  border: 1px solid white;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+table thead {
+  box-shadow: inset 0 1px 0 white, inset 0 -1px 0 white;
+  position: sticky;
+  inset-block-start: 0;
+  background-color: #002060;
+}
+
+#CoverageButton {
+  height: 100%;
+  width: 100%;
+  color: #fff !important;
+  background: #002060;
+  padding: 15px;
+  border-radius: 5px;
+  display: inline-block;
+  border: solid;
+  transition: all 0.4s ease 0s;
+  margin-top: auto;
+}
+
+#CoverageButton:hover {
+  background: #003bb0;
+  letter-spacing: 1px;
+  -webkit-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+  -moz-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+  box-shadow: 5px 40px -10px rgba(0, 0, 0, 0.57);
+  transition: all 0.4s ease 0s;
+}
+
+#UnionsButton {
+  height: 100%;
+  width: 100%;
+  color: #fff !important;
+  background: #002060;
+  padding: 15px;
+  border-radius: 5px;
+  display: inline-block;
+  border: solid;
+  transition: all 0.4s ease 0s;
+  margin-top: auto;
+}
+
+#UnionsButton:hover {
+  background: #003bb0;
+  letter-spacing: 1px;
+  -webkit-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+  -moz-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+  box-shadow: 5px 40px -10px rgba(0, 0, 0, 0.57);
+  transition: all 0.4s ease 0s;
+}
+
+#TableButton {
+  height: 100%;
+  width: 100%;
+  color: #fff !important;
+  background: #002060;
+  padding: 15px;
+  border-radius: 5px;
+  display: inline-block;
+  border: solid;
+  transition: all 0.4s ease 0s;
+  margin-top: auto;
+}
+
+#TableButton:hover {
+  background: #003bb0;
+  letter-spacing: 1px;
+  -webkit-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+  -moz-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+  box-shadow: 5px 40px -10px rgba(0, 0, 0, 0.57);
+  transition: all 0.4s ease 0s;
+}
+
+#ClearOutputButton {
+  height: 100%;
+  width: 100%;
+  color: #fff !important;
+  background: #c60000;
+  padding: 15px;
+  border-radius: 5px;
+  display: inline-block;
+  border: solid;
+  transition: all 0.4s ease 0s;
+  margin-top: auto;
+}
+
+#ClearOutputButton:hover {
+  background: #ff6a6a;
+  letter-spacing: 1px;
+  -webkit-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+  -moz-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+  box-shadow: 5px 40px -10px rgba(0, 0, 0, 0.57);
+  transition: all 0.4s ease 0s;
+}
+
+#ClearTableButton {
+  height: 100%;
+  width: 100%;
+  color: #fff !important;
+  background: #c60000;
+  padding: 15px;
+  border-radius: 5px;
+  display: inline-block;
+  border: solid;
+  transition: all 0.4s ease 0s;
+  margin-top: auto;
+}
+
+#ClearTableButton:hover {
+  background: #ff6a6a;
+  letter-spacing: 1px;
+  -webkit-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+  -moz-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+  box-shadow: 5px 40px -10px rgba(0, 0, 0, 0.57);
+  transition: all 0.4s ease 0s;
+}
+
+#GuideButton {
+  height: 100%;
+  width: 100%;
+  color: #fff !important;
+  background: #009100;
+  padding: 15px;
+  border-radius: 5px;
+  display: inline-block;
+  border: solid;
+  transition: all 0.4s ease 0s;
+  margin-top: auto;
+}
+
+#GuideButton:hover {
+  background: #29e000;
+  letter-spacing: 1px;
+  -webkit-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+  -moz-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+  box-shadow: 5px 40px -10px rgba(0, 0, 0, 0.57);
+  transition: all 0.4s ease 0s;
+}
+
+#InputContainer {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* Five equal-width columns */
+  grid-template-rows: auto auto auto; /* Three rows: labels, text areas, buttons */
+  gap: 10px; /* Spacing between grid items */
+  max-width: 90%; /* Constrain the overall width */
+  margin: 0 auto; /* Center the grid horizontally */
+}
+
+/* Labels span the first row */
+.CasesLabel,
+.StatesLabel,
+.StickersLabel,
+.DesiredAlgsLabel,
+.UndesiredAlgsLabel {
+  grid-row: 1; /* First row */
+}
+
+.CasesLabel {
+  grid-column: 1;
+}
+.StatesLabel {
+  grid-column: 2;
+}
+.StickersLabel {
+  grid-column: 3;
+}
+.DesiredAlgsLabel {
+  grid-column: 4;
+}
+.UndesiredAlgsLabel {
+  grid-column: 5;
+}
+
+/* Text areas span the second row */
+textarea {
+  width: 100%; /* Ensure text areas fit within their grid cells */
+  resize: vertical; /* Allow vertical resizing only */
+}
+
+.Cases {
+  grid-column: 1;
+  grid-row: 2; /* Second row */
+}
+
+.States {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.Stickers {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+.DesiredAlgs {
+  grid-column: 4;
+  grid-row: 2;
+}
+
+.UndesiredAlgs {
+  grid-column: 5;
+  grid-row: 2;
+}
+
+#OptionsContainer {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* Five equal-width columns */
+  grid-template-rows: auto auto auto; /* Three rows: labels, text areas, buttons */
+  gap: 10px; /* Spacing between grid items */
+  max-width: 90%; /* Constrain the overall width */
+  margin: 0 auto; /* Center the grid horizontally */
+}
+
+select {
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+}
+
+.AlgSets {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.StateSets {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+#ButtonContainer {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr); /* Five equal-width columns */
+  grid-template-rows: auto auto auto; /* Three rows: labels, text areas, buttons */
+  gap: 10px; /* Spacing between grid items */
+  max-width: 90%; /* Constrain the overall width */
+  margin: 0 auto; /* Center the grid horizontally */
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+}
+
+.CoverageButton {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.UnionsButton {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.tABLEButton {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+.ClearOutputButton {
+  grid-column: 4;
+  grid-row: 1;
+}
+
+.ClearTableButton {
+  grid-column: 5;
+  grid-row: 1;
+}
+
+.GuideButton {
+  grid-column: 6;
+  grid-row: 1;
+}
+
+#OutputContainer {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Five equal-width columns */
+  grid-template-rows: auto auto auto; /* Three rows: labels, text areas, buttons */
+  gap: 10px; /* Spacing between grid items */
+  max-width: 90%; /* Constrain the overall width */
+  margin: 0 auto; /* Center the grid horizontally */
+}
+
+/* Buttons span the third row */
+button {
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+}
+
+.CoverageLabel {
+  grid-column: 1;
+  grid-row: 1; /* Third row */
+}
+
+.UnionsLabel {
+  grid-column: 2;
+  grid-row: 1; /* Third row */
+}
+
+.Coverage {
+  grid-column: 1;
+  grid-row: 2; /* Third row */
+}
+
+.Unions {
+  grid-column: 2;
+  grid-row: 2; /* Third row */
+}
+
+/*.item {
+  width: 350px;
+  height: 200px;
+  padding: 10px;
+}*/
+
+#comboTableContainer::-webkit-scrollbar,
+#unionTableContainer::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+#comboTableContainer::-webkit-scrollbar-track,
+#unionTableContainer::-webkit-scrollbar-track {
+  background-color: #e4e4e4;
+  border-radius: 100px;
+}
+
+#comboTableContainer::-webkit-scrollbar-thumb,
+#unionTableContainer::-webkit-scrollbar-thumb {
+  border-radius: 100px;
+  background-image: linear-gradient(180deg, #6e9cff 0%, #0022ff 99%);
+  box-shadow: inset 2px 2px 5px 0 rgba(#fff, 0.5);
+}
+
+#Cases::-webkit-scrollbar,
+#DesiredStates::-webkit-scrollbar,
+#InvolvedStickers::-webkit-scrollbar,
+#DesiredAlgs::-webkit-scrollbar,
+#UndesiredAlgs::-webkit-scrollbar,
+#Coverage::-webkit-scrollbar,
+#Unions::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+#Cases::-webkit-scrollbar-track,
+#DesiredStates::-webkit-scrollbar-track,
+#InvolvedStickers::-webkit-scrollbar-track,
+#DesiredAlgs::-webkit-scrollbar-track,
+#UndesiredAlgs::-webkit-scrollbar-track,
+#Coverage::-webkit-scrollbar-track,
+#Unions::-webkit-scrollbar-track {
+  background-color: #e4e4e4;
+  border-radius: 100px;
+}
+
+#Cases::-webkit-scrollbar-thumb,
+#DesiredStates::-webkit-scrollbar-thumb,
+#InvolvedStickers::-webkit-scrollbar-thumb,
+#DesiredAlgs::-webkit-scrollbar-thumb,
+#UndesiredAlgs::-webkit-scrollbar-thumb,
+#Coverage::-webkit-scrollbar-thumb,
+#Unions::-webkit-scrollbar-thumb {
+  border-radius: 100px;
+  background-image: linear-gradient(180deg, #bfbfbf 0%, #808080 99%);
+  box-shadow: inset 2px 2px 5px 0 rgba(#fff, 0.5);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #e4e4e4;
+  border-radius: 100px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 100px;
+  background-image: linear-gradient(180deg, #6e9cff 0%, #0022ff 99%);
+  box-shadow: inset 2px 2px 5px 0 rgba(#fff, 0.5);
+}

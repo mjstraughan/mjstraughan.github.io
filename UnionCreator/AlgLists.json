@@ -1,7 +1,6 @@
 {
   "Custom Algorithm Set": [],
   "1LLL": [
-    "",
     "(U') R U R' U R U2 R' U2 R' U' R U' R' U2 R",
     "R' U R U2 R' U' R U' R U R' U' R' U' R U R U' R'",
     "(U2) R' U2 R U R' U R2 U2 R' U' R U' R'",
@@ -3919,7 +3918,6 @@
     "(U) R' F R F2 U' L' U' L U' F R B' R B R2"
   ],
   "ZBLL": [
-    "",
     "M2 U M' U2 M U M2",
     "M2 U' M' U2 M U' M2",
     "M2 U M2 U2 M2 U M2",

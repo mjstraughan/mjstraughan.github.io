@@ -32,11 +32,11 @@ tableButton.addEventListener("click", () => {
 /*****************************UNIONS BUTTON*********************************/
 /********************************************************************************/
 
-let unionsButton = document.querySelector("#UnionsButton");
+/*let unionsButton = document.querySelector("#UnionsButton");
 
 unionsButton.addEventListener("click", () => {
   findBestUnions();
-});
+});*/
 
 /********************************************************************************/
 /**********************************STOP BUTTON***********************************/
@@ -80,32 +80,6 @@ clearTableButton.addEventListener("click", () => {
     table.parentNode.removeChild(table);
   }
 });
-
-/********************************************************************************/
-/*****************************MULTI UNIONS FUNCTION******************************/
-/********************************************************************************/
-
-function multiUnions() {
-  // Get the user input cases and states.
-  let inputCases = document.getElementById("Cases").value.split("\n");
-  let desiredStates = document
-    .getElementById("DesiredStates")
-    .value.split("\n");
-  // Create a main array to contain the coverage for each case.
-  let coverage = [];
-
-  // Step 1: Find all cases which the current row case can solve to the desired states.
-  // This is the same as the crossed cases process used in the previous columns.
-  // An array of a list of numbers for each row is produced. Each one fills the "Cases this case covers" column
-  // Each row of covered cases is pushed to the coverage array.
-  for (let row = 0; row < inputCases.length; row++) {
-    let rowCoverage = []; // Variable to push the covered cases for the current row.
-    for (let col = 0; col < desiredStates.length; col++) {
-      rowCoverage.push(compareStates(desiredStates[col], inputCases[row])); // Add the current case to the row coverage.
-    }
-    coverage.push(rowCoverage); // Add the row coverage array to the main coverage array.
-  }
-}
 
 /********************************************************************************/
 /*****************************CREATE TABLES FUNCTION*****************************/

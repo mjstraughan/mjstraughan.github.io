@@ -372,7 +372,7 @@ function findUnions() {
 }
 
 /********************************************************************************/
-/*****************************FIND BEST UNIONS FUNCTION*******************************/
+/*********************************FIND BEST UNIONS*******************************/
 /********************************************************************************/
 
 let coverageGenerated = false; // Track if coverage calculation has been done
@@ -416,7 +416,7 @@ function handleUnionsButton() {
     greedyStep(unionsTextArea);
   } else {
     unionsTextArea.value =
-      "Coverage must be calculated first using the CoverageButton.";
+      "Coverage must be calculated before generating unions.";
   }
 }
 
@@ -548,7 +548,7 @@ function greedyStep(textArea) {
     const finalSets = selectedSets
       .map((index) => index + 1)
       .sort((a, b) => a - b);
-    textArea.value += `\nCoverage complete.\nTotal algorithms in the union: ${
+    textArea.value += `\nCoverage complete.\nTotal algorithms to provide full coverage: ${
       finalSets.length
     }\nFinal selected algorithms: ${finalSets.join(", ")}\n`;
     return;
@@ -586,7 +586,6 @@ function greedyStep(textArea) {
 }
 
 function compareStates(state1, state2) {
-  // Dummy compare function; replace with your actual logic
   return state1 === state2 ? 1 : 0;
 }
 

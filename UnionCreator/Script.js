@@ -726,11 +726,11 @@ function findCombos() {
     selectedPairs.forEach((pair, index) => {
       textArea.value += "\nPair " + (index + 1) + ": " + pair;
     });
-    /*textArea.value +=
-      "\nMinimum unique fourth elements required:" +
-      [...selectedFourthElements];*/
     textArea.value +=
       "\nTotal unique algorithms required:" + selectedFourthElements.size;
+    textArea.value +=
+      "\nInvolved algorithms:" +
+      [...selectedFourthElements].sort((a, b) => a - b).join(", ");
   }
 
   const algListLength = algList.length; // Adjust based on your algorithm list length

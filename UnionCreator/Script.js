@@ -590,6 +590,155 @@ function compareStates(state1, state2) {
 }
 
 /********************************************************************************/
+/*****************************ALGORITHM COMBINATIONS*****************************/
+/********************************************************************************/
+
+document.getElementById("ComboButton").addEventListener("click", findCombos);
+
+function findCombos() {
+  const algList = document.getElementById("Cases").value.split("\n");
+
+  const textArea = document.getElementById("Coverage");
+  textArea.value = ""; // Clear previous text
+  const AUFs = ["", "U", "U'", "U2"];
+  const solvedState = String(applyAlg(""));
+  const UState = String(applyAlg("U"));
+  const UPState = String(applyAlg("U'"));
+  const U2State = String(applyAlg("U2"));
+  let pairs = [];
+  let counter = 0;
+
+  // Apply inverse of each alg in algList to set up the state.
+  // Then apply each possible alg combination and check if it leads to the solved state.
+  for (let h = 0; h < algList.length; h++) {
+    for (let i = 0; i < algList.length; i++) {
+      for (let j = 0; j < algList.length; j++) {
+        for (const auf1 of AUFs) {
+          for (const auf2 of AUFs) {
+            for (const auf3 of AUFs) {
+              for (const auf4 of AUFs) {
+                const combinedAlg = `${auf1} ${getInverse(
+                  algList[h]
+                )} ${auf2} ${algList[i]} ${auf3} ${algList[j]} ${auf4}`.trim();
+                const resultState = String(applyAlg(combinedAlg));
+                counter += 1;
+                /*console.log(
+                  ("Combination " + counter + "/" + algList.length) ^ (3 * 16)
+                );*/
+
+                // Compare resultState to solved states
+                if (
+                  resultState === solvedState ||
+                  resultState === UState ||
+                  resultState === UPState ||
+                  resultState === U2State
+                ) {
+                  pairs.push([auf1, h + 1, auf2, i + 1, auf3, j + 1]);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  textArea.value +=
+    "Total number of pairs that reach the solved state: " + pairs.length;
+  //textArea.value = "Possible pairs:" + pairs[200];
+  //console.log("Possible pairs:", String(pairs));
+
+  function greedySetCover(pairs, algListLength) {
+    const coverageMap = new Map(); // Map to track which arrays cover which indices in algList
+    const uncoveredIndices = new Set(
+      [...Array(algListLength).keys()].map((x) => x + 1)
+    ); // Indices 1 to algListLength
+    const selectedPairs = [];
+    const selectedFourthElements = new Set();
+
+    // Populate coverageMap
+    pairs.forEach((pair) => {
+      const secondElem = pair[1]; // Second element in the pair
+      if (!coverageMap.has(secondElem)) {
+        coverageMap.set(secondElem, []);
+      }
+      coverageMap.get(secondElem).push(pair);
+    });
+
+    // Greedy algorithm to minimize unique fourth elements while covering all indices
+    while (uncoveredIndices.size > 0) {
+      let bestPair = null;
+      let bestCoverage = 0;
+      let usesExistingFourthElement = false;
+
+      // Iterate over all pairs to find the best pair to add
+      for (const pair of pairs) {
+        const secondElem = pair[1];
+        const fourthElem = pair[3];
+
+        if (uncoveredIndices.has(secondElem)) {
+          const currentCoverage = [...uncoveredIndices].filter(
+            (index) => index === secondElem
+          ).length;
+
+          const isUsingExistingFourthElement =
+            selectedFourthElements.has(fourthElem);
+
+          // Prioritize pairs that use existing fourth elements
+          if (
+            (isUsingExistingFourthElement && currentCoverage > bestCoverage) ||
+            (!usesExistingFourthElement &&
+              !isUsingExistingFourthElement &&
+              currentCoverage > bestCoverage)
+          ) {
+            bestPair = pair;
+            bestCoverage = currentCoverage;
+            usesExistingFourthElement = isUsingExistingFourthElement;
+          }
+        }
+      }
+
+      if (bestPair === null) {
+        textArea.value +=
+          "\nUnable to find covering pairs. Check the input data.";
+      }
+
+      // Add the best pair to the solution
+      selectedPairs.push(bestPair);
+      selectedFourthElements.add(bestPair[3]);
+
+      // Mark indices covered by the best pair as covered
+      uncoveredIndices.delete(bestPair[1]);
+    }
+
+    // Output the results
+    // Output the selected pairs in full detail
+    textArea.value += "\nSelected minimum pairs:";
+    selectedPairs.forEach((pair) => {
+      [pair[0], pair[2], pair[4], pair[6]] = [
+        pair[0],
+        pair[2],
+        pair[4],
+        pair[6],
+      ].map((auf) => (auf === "" ? "No AUF" : auf));
+    });
+
+    selectedPairs.forEach((pair, index) => {
+      textArea.value += "\nPair " + (index + 1) + ": " + pair;
+    });
+    /*textArea.value +=
+      "\nMinimum unique fourth elements required:" +
+      [...selectedFourthElements];*/
+    textArea.value +=
+      "\nTotal unique algorithms required:" + selectedFourthElements.size;
+  }
+
+  const algListLength = algList.length; // Adjust based on your algorithm list length
+
+  greedySetCover(pairs, algListLength);
+}
+
+/********************************************************************************/
 /*****************************COMPARE STATES FUNCTION****************************/
 /********************************************************************************/
 

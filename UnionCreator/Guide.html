@@ -71,6 +71,34 @@
     cases for each end state.
     <br />
     <br />
+    <h3>Generate Combos Button</h3>
+    Using the algorithm list in the Cases text box, the minimum number of
+    algorithms to solve the group of pieces in two steps will be generated. For
+    example, input all of ZBLL and it will generaate Petrus 270. For 1LLL, it
+    will generate Duplex.
+    <br />
+    <br />
+    How to read the output: The ending line will show the minimum number of
+    algorithms required to solve the group of pieces in two steps. It will also
+    show all of the pairs involved to solve each case that is solved in one step
+    using the algorithms in the Cases text box. A sequence of information is
+    shown after each Pair and its number. It will look like "Pair 1: No
+    AUF,1,U,7,U2,15".
+    <br />
+    <ol>
+      <li>"Pair 1" means that it is for the pair that solves case 1</li>
+      <li>"No AUF,1" means that for case 1 don't perform an AUF.</li>
+      <li>
+        "U,7": The first part of the pair starts here. This means to perform a U
+        AUF then execute algorithm 2.
+      </li>
+      <li>
+        "U2,15" is the second part of the pair. This means to perform a U2 AUF
+        then execute algorithm 15. The group of pieces should now be solved and
+        only a final AUF remains.
+      </li>
+    </ol>
+    <br />
     <center><h1>Example</h1></center>
     <ol>
       <li>

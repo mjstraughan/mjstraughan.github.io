@@ -615,6 +615,17 @@ function findCombos() {
   let pairs = [];
   let counter = 0;
 
+  const desiredAlgs = document
+    .getElementById("DesiredAlgs")
+    .value.split(" ")
+    .map((num) => parseInt(num, 10))
+    .filter((num) => !isNaN(num));
+  const undesiredAlgs = document
+    .getElementById("UndesiredAlgs")
+    .value.split(" ")
+    .map((num) => parseInt(num, 10))
+    .filter((num) => !isNaN(num));
+
   function processBatch(start, batchSize) {
     for (let h = start; h < Math.min(start + batchSize, algList.length); h++) {
       for (let i = 0; i < algList.length; i++) {
@@ -627,9 +638,8 @@ function findCombos() {
               algList[i],
               auf3,
               algList[j],
-            ]
-              .join(" ")
-              .trim();
+            ].join(" ");
+
             const resultState = String(applyAlg(combinedAlg));
 
             counter++;
@@ -654,29 +664,28 @@ function findCombos() {
   }
 
   function greedySetCover(pairs, algListLength) {
-    const coverageMap = new Map(); // Map to track which arrays cover which indices in algList
+    const coverageMap = new Map();
     const uncoveredIndices = new Set(
       [...Array(algListLength).keys()].map((x) => x + 1)
-    ); // Indices 1 to algListLength
+    );
     const selectedPairs = [];
     const selectedFourthElements = new Set();
 
     // Populate coverageMap
     pairs.forEach((pair) => {
-      const secondElem = pair[1]; // Second element in the pair
+      const secondElem = pair[1];
       if (!coverageMap.has(secondElem)) {
         coverageMap.set(secondElem, []);
       }
       coverageMap.get(secondElem).push(pair);
     });
 
-    // Greedy algorithm to minimize unique fourth elements while covering all indices
     while (uncoveredIndices.size > 0) {
       let bestPair = null;
       let bestCoverage = 0;
       let usesExistingFourthElement = false;
+      let usesDesiredAlg = false;
 
-      // Iterate over all pairs to find the best pair to add
       for (const pair of pairs) {
         const secondElem = pair[1];
         const fourthElem = pair[3];
@@ -689,16 +698,33 @@ function findCombos() {
           const isUsingExistingFourthElement =
             selectedFourthElements.has(fourthElem);
 
-          // Prioritize pairs that use existing fourth elements
-          if (
-            (isUsingExistingFourthElement && currentCoverage > bestCoverage) ||
-            (!usesExistingFourthElement &&
-              !isUsingExistingFourthElement &&
-              currentCoverage > bestCoverage)
+          const isUsingDesiredAlg = desiredAlgs.includes(fourthElem);
+
+          // Prioritize desired algorithms, then existing fourth elements
+          if (isUsingDesiredAlg && !undesiredAlgs.includes(fourthElem)) {
+            bestPair = pair;
+            bestCoverage = currentCoverage;
+            usesExistingFourthElement = isUsingExistingFourthElement;
+            usesDesiredAlg = isUsingDesiredAlg;
+            break; // Break out of the loop if a desired algorithm is found
+          } else if (
+            isUsingExistingFourthElement &&
+            !undesiredAlgs.includes(fourthElem) &&
+            currentCoverage > bestCoverage
           ) {
             bestPair = pair;
             bestCoverage = currentCoverage;
             usesExistingFourthElement = isUsingExistingFourthElement;
+            usesDesiredAlg = isUsingDesiredAlg;
+          } else if (
+            !usesExistingFourthElement &&
+            !undesiredAlgs.includes(fourthElem) &&
+            currentCoverage > bestCoverage
+          ) {
+            bestPair = pair;
+            bestCoverage = currentCoverage;
+            usesExistingFourthElement = isUsingExistingFourthElement;
+            usesDesiredAlg = isUsingDesiredAlg;
           }
         }
       }
@@ -709,23 +735,16 @@ function findCombos() {
         return;
       }
 
-      // Add the best pair to the solution
       selectedPairs.push(bestPair);
       selectedFourthElements.add(bestPair[3]);
-
-      // Mark indices covered by the best pair as covered
       uncoveredIndices.delete(bestPair[1]);
     }
 
-    // Output the results
     textArea.value += "\nSelected minimum pairs:";
-    selectedPairs.forEach((pair) => {
+    selectedPairs.forEach((pair, index) => {
       [pair[0], pair[2], pair[4]] = [pair[0], pair[2], pair[4]].map((auf) =>
         auf === "" ? "No AUF" : auf
       );
-    });
-
-    selectedPairs.forEach((pair, index) => {
       textArea.value += "\nPair " + (index + 1) + ": " + pair.join(" ");
     });
     textArea.value +=
@@ -736,7 +755,7 @@ function findCombos() {
     textArea.scrollTop = textArea.scrollHeight;
   }
 
-  processBatch(0, 1); // Process 1 algorithm at a time
+  processBatch(0, 1);
 }
 
 /********************************************************************************/

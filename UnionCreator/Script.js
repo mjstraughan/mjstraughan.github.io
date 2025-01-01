@@ -651,7 +651,6 @@ function findCombos() {
       }
     }
 
-    // Update progress in the text area
     textArea.value += `Processed ${counter} combinations...\n`;
     textArea.scrollTop = textArea.scrollHeight;
     if (start + batchSize < algList.length) {
@@ -664,67 +663,53 @@ function findCombos() {
   }
 
   function greedySetCover(pairs, algListLength) {
-    const coverageMap = new Map();
     const uncoveredIndices = new Set(
       [...Array(algListLength).keys()].map((x) => x + 1)
     );
     const selectedPairs = [];
-    const selectedFourthElements = new Set();
-
-    // Populate coverageMap
-    pairs.forEach((pair) => {
-      const secondElem = pair[1];
-      if (!coverageMap.has(secondElem)) {
-        coverageMap.set(secondElem, []);
-      }
-      coverageMap.get(secondElem).push(pair);
-    });
+    const selectedAlgorithms = new Set(); // Track unique numbers from 4th and 6th elements
 
     while (uncoveredIndices.size > 0) {
       let bestPair = null;
       let bestCoverage = 0;
-      let usesExistingFourthElement = false;
-      let usesDesiredAlg = false;
+      let minNewUnique = Infinity;
 
       for (const pair of pairs) {
         const secondElem = pair[1];
         const fourthElem = pair[3];
+        const sixthElem = pair[5];
 
         if (uncoveredIndices.has(secondElem)) {
           const currentCoverage = [...uncoveredIndices].filter(
             (index) => index === secondElem
           ).length;
 
-          const isUsingExistingFourthElement =
-            selectedFourthElements.has(fourthElem);
+          const newUnique = [
+            ...new Set(
+              [fourthElem, sixthElem].filter(
+                (elem) => !selectedAlgorithms.has(elem)
+              )
+            ),
+          ].length;
 
-          const isUsingDesiredAlg = desiredAlgs.includes(fourthElem);
+          const isDesired =
+            desiredAlgs.includes(fourthElem) || desiredAlgs.includes(sixthElem);
+          const isUndesired =
+            undesiredAlgs.includes(fourthElem) ||
+            undesiredAlgs.includes(sixthElem);
 
-          // Prioritize desired algorithms, then existing fourth elements
-          if (isUsingDesiredAlg && !undesiredAlgs.includes(fourthElem)) {
-            bestPair = pair;
-            bestCoverage = currentCoverage;
-            usesExistingFourthElement = isUsingExistingFourthElement;
-            usesDesiredAlg = isUsingDesiredAlg;
-            break; // Break out of the loop if a desired algorithm is found
-          } else if (
-            isUsingExistingFourthElement &&
-            !undesiredAlgs.includes(fourthElem) &&
-            currentCoverage > bestCoverage
+          // Skip undesired pairs
+          if (isUndesired) continue;
+
+          // Prioritize desired algorithms, then minimize new unique, then maximize coverage
+          if (
+            isDesired ||
+            newUnique < minNewUnique ||
+            (newUnique === minNewUnique && currentCoverage > bestCoverage)
           ) {
             bestPair = pair;
             bestCoverage = currentCoverage;
-            usesExistingFourthElement = isUsingExistingFourthElement;
-            usesDesiredAlg = isUsingDesiredAlg;
-          } else if (
-            !usesExistingFourthElement &&
-            !undesiredAlgs.includes(fourthElem) &&
-            currentCoverage > bestCoverage
-          ) {
-            bestPair = pair;
-            bestCoverage = currentCoverage;
-            usesExistingFourthElement = isUsingExistingFourthElement;
-            usesDesiredAlg = isUsingDesiredAlg;
+            minNewUnique = newUnique;
           }
         }
       }
@@ -736,7 +721,8 @@ function findCombos() {
       }
 
       selectedPairs.push(bestPair);
-      selectedFourthElements.add(bestPair[3]);
+      selectedAlgorithms.add(bestPair[3]);
+      selectedAlgorithms.add(bestPair[5]);
       uncoveredIndices.delete(bestPair[1]);
     }
 
@@ -747,11 +733,10 @@ function findCombos() {
       );
       textArea.value += "\nPair " + (index + 1) + ": " + pair.join(" ");
     });
-    textArea.value +=
-      "\nTotal unique algorithms required: " + selectedFourthElements.size;
-    textArea.value +=
-      "\nInvolved algorithms: " +
-      [...selectedFourthElements].sort((a, b) => a - b).join(", ");
+    textArea.value += `\nTotal unique algorithms required: ${selectedAlgorithms.size}`;
+    textArea.value += `\nInvolved algorithms: ${[...selectedAlgorithms]
+      .sort((a, b) => a - b)
+      .join(", ")}`;
     textArea.scrollTop = textArea.scrollHeight;
   }
 

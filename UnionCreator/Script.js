@@ -731,7 +731,7 @@ function findCombos() {
       [pair[0], pair[2], pair[4]] = [pair[0], pair[2], pair[4]].map((auf) =>
         auf === "" ? "No AUF" : auf
       );
-      textArea.value += "\nPair " + (index + 1) + ": " + pair.join(" ");
+      textArea.value += "\nCase " + (index + 1) + ": " + pair.join(" ");
     });
     textArea.value += `\nTotal unique algorithms required: ${selectedAlgorithms.size}`;
     textArea.value += `\nInvolved algorithms: ${[...selectedAlgorithms]

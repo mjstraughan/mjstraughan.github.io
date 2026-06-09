@@ -1002,6 +1002,7 @@ function applyAlg(individualCase) {
 
 let algLists = {};
 let stateLists = {};
+let stickerLists = {};
 
 // Fetch AlgLists.json
 fetch("AlgLists.json")
@@ -1021,11 +1022,22 @@ fetch("StateLists.json")
   })
   .catch((error) => console.error("Error loading StateLists:", error));
 
+// Fetch StickerLists.json
+fetch("StickersLists.json")
+  .then((response) => response.json())
+  .then((data) => {
+    stickerLists = data; // Store the StickerLists data
+    updateStickerList();
+  })
+  .catch((error) => console.error("Error loading StickerLists:", error));
+
 // Select dropdowns and textareas
 const algDropdown = document.getElementById("AlgSet");
 const algTextArea = document.getElementById("Cases");
 const stateDropdown = document.getElementById("StateSet");
 const stateTextArea = document.getElementById("DesiredStates");
+const stickerDropdown = document.getElementById("StickerSet");
+const stickerTextArea = document.getElementById("InvolvedStickers");
 
 // Update AlgSet dropdown and textarea
 function updateAlgList() {
@@ -1041,6 +1053,27 @@ function updateStateList() {
   stateTextArea.value = list ? list.join("\n") : ""; // Clear if list is empty or undefined
 }
 
+// Update StateSet dropdown and textarea
+function updateStateList() {
+  const selectedOption = stateDropdown.value;
+  const list = stateLists[selectedOption];
+  stateTextArea.value = list ? list.join("\n") : ""; // Clear if list is empty or undefined
+}
+
+// Update StickerSet dropdown and textarea
+function updateStickerList() {
+  const selectedOption = stickerDropdown.value;
+  const list = stickerLists[selectedOption];
+  stickerTextArea.value = list ? list.join("\n") : ""; // Clear if list is empty or undefined
+
+  if (selectedOption === "Base Sticker List") {
+    stickerTextArea.readOnly = true;
+  } else {
+    stickerTextArea.readOnly = false;
+  }
+}
+
 // Event listeners for dropdowns
 algDropdown.addEventListener("change", updateAlgList);
 stateDropdown.addEventListener("change", updateStateList);
+stickerDropdown.addEventListener("change", updateStickerList);

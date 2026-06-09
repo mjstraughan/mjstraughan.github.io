@@ -432,7 +432,7 @@ function resetState() {
 }
 
 function calculateCoverage(textArea) {
-  textArea.value += "Step 1: Calculating case coverage...\n";
+  textArea.value += "Step 1: Crossing cases to create text table...\n";
   const inputCases = document.getElementById("Cases").value.split("\n");
   const desiredStates = document
     .getElementById("DesiredStates")
@@ -449,8 +449,38 @@ function calculateCoverage(textArea) {
 
     // Exit condition
     if (row >= inputCases.length) {
+      // Finalize the coverage calculation
+      textArea.value += "\n--- Final Case Coverage ---\n";
+      
+      // Initialize empty arrays for every case number (1-indexed mapping)
+      let invertedCoverage = [];
+      for (let i = 0; i < inputCases.length; i++) {
+        invertedCoverage.push([]);
+      }
+
+      // Read through the generated raw matrix to populate the inverted list
+      for (let r = 0; r < findUnionsCasesCoverage.length; r++) {
+        let coveredCasesInRow = findUnionsCasesCoverage[r];
+        for (let c = 0; c < coveredCasesInRow.length; c++) {
+          let caseNum = coveredCasesInRow[c];
+
+          // Validate it matches an available case index
+          if (caseNum !== "No Match" && caseNum > 0 && caseNum <= inputCases.length) {
+            // This case (caseNum) is found within row 'r + 1'
+            invertedCoverage[caseNum - 1].push(r + 1);
+          }
+        }
+      }
+
+      // Print the inverted list into the text area
+      for (let i = 0; i < invertedCoverage.length; i++) {
+        let appearingRows = [...new Set(invertedCoverage[i])].sort((a, b) => a - b);
+        textArea.value += `${i + 1}: ${appearingRows.join(", ")}\n`;
+      }
+      /*******************************************************************/
+
       coverageGenerated = true; // Mark coverage as complete
-      textArea.value += "Coverage calculation completed.\n";
+      textArea.value += "\nCoverage calculation completed.\n";
       textArea.scrollTop = textArea.scrollHeight;
       return;
     }
@@ -464,13 +494,13 @@ function calculateCoverage(textArea) {
         );
       }
 
-      // Cache and log the current row's results
+      // Cache and log the current row's results (UNCHANGED)
       findUnionsCasesCoverage[row] = [...new Set(findUnionsRowCoverage)].sort(
         (a, b) => a - b
       );
       universalSet = new Set([...universalSet, ...findUnionsRowCoverage]);
 
-      // Log the processed row
+      // Log the processed row live as it calculates (UNCHANGED)
       textArea.value += `${row + 1}: ${findUnionsCasesCoverage[row].join(
         ", "
       )}\n`;

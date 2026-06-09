@@ -29,7 +29,12 @@
     <h3>Involved Stickers</h3>
     A preset list of cube stickers are provided. If you want to ignore stickers,
     replace them all with N or any chosen character or set of characters. This
-    will force the internal cube to view those stickers as all the same.
+    will force the internal cube to view those stickers as all the same. For example, 
+    if you want to focus only on the orientation of the U corners and ignore their 
+    permutation, replace ULB, UBR, UFL, and URF with a single letter such as C, 
+    then replace all other stickers on those corners with a single letter such as N.
+    This tells the program that all U stickers of the corners are the same and the side
+    stickers of those corners are the same of a diffierent group.
     <br />
     <br />
     <h3>Desired Algorithms</h3>
@@ -47,13 +52,13 @@
     <br />
     <br />
     <h3>Generate Coverage Button</h3>
-    Generates the cases that each algorithm will solve to one of the desired end
-    states. Taking the first line as an example: The first line corresponds with
-    the first algorithm in the Cases input box. The various numbers are a
-    reference to an algorithm number from that same list. If the first algorithm
-    in the list is applied to any of those algorithm numbers after that number
-    has been setup in reverse to produce the case, the algorithm will solve that
-    case to one of the desired end states.
+    This will cross the inverse of each desired end state with the inverse of the algorithms 
+    in the Cases input box. This produces a table in text form showing the 
+    resulting state of applying those two algorithms together. After this is done, 
+    this text table will map the resulting crossed states to show another list that 
+    is the full coverage. This is the list that you want to use when developing 
+    algorithm sheets. Each number on the left can be solved to any of the desired 
+    end states using any of the algorithms after the colon.
     <br />
     <br />
     <h3>Generate Unions Button</h3>
@@ -68,7 +73,8 @@
     This will generate a table that provides a convenient visual of the cases
     that were input into the Cases text box and the coverage that they provide.
     It shows the case number, a 3D image, an overhead image, and the resulting
-    cases for each end state.
+    cases for each end state. This table is the same as the first part of what 
+    is produced when clicking the Generate Coverage button.
     <br />
     <br />
     <h3>Generate Combos Button</h3>
@@ -77,27 +83,6 @@
     example, input all of ZBLL and it will generaate Petrus 270. For 1LLL, it
     will generate Duplex.
     <br />
-    <br />
-    How to read the output: The ending line will show the minimum number of
-    algorithms required to solve the group of pieces in two steps. It will also
-    show all of the pairs involved to solve each case that is solved in one step
-    using the algorithms in the Cases text box. A sequence of information is
-    shown after each Pair and its number. It will look like "Pair 1: No
-    AUF,1,U,7,U2,15".
-    <br />
-    <ol>
-      <li>"Pair 1" means that it is for the pair that solves case 1</li>
-      <li>"No AUF,1" means that for case 1 don't perform an AUF.</li>
-      <li>
-        "U,7": The first part of the pair starts here. This means to perform a U
-        AUF then execute algorithm 2.
-      </li>
-      <li>
-        "U2,15" is the second part of the pair. This means to perform a U2 AUF
-        then execute algorithm 15. The group of pieces should now be solved and
-        only a final AUF remains.
-      </li>
-    </ol>
     <br />
     <center><h1>Example</h1></center>
     <ol>

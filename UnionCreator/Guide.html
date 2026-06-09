@@ -18,23 +18,39 @@
     <br />
     <h3>Cases</h3>
     In this box, input the entire list of algorithms that solve all pieces
-    involved in the step.
+    involved in the step. If you are at 1LLL and want to solve all four corners 
+    and one edge, input all 1LLL algorithms. There are some common ending step 
+    algorithms provided in a dropdown menu so that you don't have to generate 
+    them. For algorithm sets not provided, they can be generated using Batch Solver.
     <br />
     <br />
     <h3>Desired States</h3>
     Input the algorithms that solve the end states that you want to be able to
-    solve to.
+    solve to. Include four versions of each algorithm, each with the four possible 
+    AUFs at the start (nothing, U, U', U2) if you want to include all possible 
+    AUF endings as part of your desired end states. If you want to solve to a 
+    specific corner orientation, for example, and want to allow the ability for 
+    the end state to have that corner orientation at any AUF, ensure that all
+    four AUFs plus algorithm combinations are listed. If you want the corner 
+    orientation to be at just one specific AUF, only include that one AUF plus 
+    the algorithm. Algorithms can be easily duplicated and AUFs automatically added 
+    using spreadsheet software and formulas. This manual AUF addition is to allow
+    for detailed user control over their desired end states.
     <br />
     <br />
     <h3>Involved Stickers</h3>
-    A preset list of cube stickers are provided. If you want to ignore stickers,
-    replace them all with N or any chosen character or set of characters. This
+    A preset list of cube stickers are provided. All stickers use their three layer 
+    intersection name and not the shortened versions. If you want to ignore stickers, 
+    choose the Custom Sticker Set option in the dropdown and
+    replace any stickers with N or any chosen character or set of characters. This
     will force the internal cube to view those stickers as all the same. For example, 
     if you want to focus only on the orientation of the U corners and ignore their 
     permutation, replace ULB, UBR, UFL, and URF with a single letter such as C, 
     then replace all other stickers on those corners with a single letter such as N.
     This tells the program that all U stickers of the corners are the same and the side
-    stickers of those corners are the same of a diffierent group.
+    stickers of those corners are the same of a diffierent group. It is recommened to 
+    keep the same number of stickers in the list, meaning don't remove any stickers and 
+    only modify existing stickers to rename them for sticker ignoring purposes.
     <br />
     <br />
     <h3>Desired Algorithms</h3>
@@ -71,16 +87,18 @@
     <br />
     <h3>Generate Table Button</h3>
     This will generate a table that provides a convenient visual of the cases
-    that were input into the Cases text box and the coverage that they provide.
+    that were input into the Cases text box, the desired end states, and the effect of the case crossing.
     It shows the case number, a 3D image, an overhead image, and the resulting
     cases for each end state. This table is the same as the first part of what 
-    is produced when clicking the Generate Coverage button.
+    is produced when clicking the Generate Coverage button. This table is meant for visualizing the
+    coverage and for further analyzing the results. Use the final coverage list in the Coverage text box 
+    for algorithm sheet development.
     <br />
     <br />
     <h3>Generate Combos Button</h3>
     Using the algorithm list in the Cases text box, the minimum number of
     algorithms to solve the group of pieces in two steps will be generated. For
-    example, input all of ZBLL and it will generaate Petrus 270. For 1LLL, it
+    example, input all of ZBLL and it will generate Petrus 270. For 1LLL, it
     will generate Duplex.
     <br />
     <br />
